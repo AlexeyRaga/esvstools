@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventStore.VS.Tools", "EventStore.VS.Tools\EventStore.VS.Tools.csproj", "{4C2C543F-E851-4F41-83D6-69B59205EEEA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventStore.VS.CompilerTask", "EventStore.VS.CompilerTask\EventStore.VS.CompilerTask.csproj", "{0043ADAF-0A7E-4E63-96CE-EE378650FE3E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{4C2C543F-E851-4F41-83D6-69B59205EEEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C2C543F-E851-4F41-83D6-69B59205EEEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C2C543F-E851-4F41-83D6-69B59205EEEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0043ADAF-0A7E-4E63-96CE-EE378650FE3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0043ADAF-0A7E-4E63-96CE-EE378650FE3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0043ADAF-0A7E-4E63-96CE-EE378650FE3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0043ADAF-0A7E-4E63-96CE-EE378650FE3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
