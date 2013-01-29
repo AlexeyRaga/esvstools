@@ -10,7 +10,6 @@
     <OutputType>Package</OutputType>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <ProjectType>Projections</ProjectType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -23,8 +22,5 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="Projection.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties" />
   </ItemGroup>
 </Project>

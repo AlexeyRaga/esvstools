@@ -76,6 +76,17 @@ namespace EventStore.EventStore_VS_Tools
         //    return base.QueryStatusOnNode(cmdGroup, cmd, pCmdText, ref result);
         //}
 
+        protected override ReferenceContainerNode CreateReferenceContainerNode()
+        {
+            return null;
+        }
+
+        protected override void WalkSourceProjectAndAdd(IVsHierarchy sourceHierarchy, uint itemId, HierarchyNode targetNode, bool addSiblings)
+        {
+            if (targetNode == null || targetNode is ReferenceContainerNode) return;
+            base.WalkSourceProjectAndAdd(sourceHierarchy, itemId, targetNode, addSiblings);
+        }
+
         protected override bool DisableCmdInCurrentMode(Guid commandGroup, uint command)
         {
             if (commandGroup == VsMenus.guidStandardCommandSet97 || commandGroup == VsMenus.guidStandardCommandSet2K)
@@ -91,6 +102,7 @@ namespace EventStore.EventStore_VS_Tools
                         case VsCommands.StepInto:
                         case VsCommands.Restart:
                         case VsCommands.Resume:
+                        case VsCommands.SetStartupProject:
                             return true;
                     }
                 }
