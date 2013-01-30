@@ -41,8 +41,12 @@
          must be a menu. -->
     <Groups>
 
-      <Group guid="guidEventStore_VS_ToolsCmdSet" id="MyMenuGroup" priority="0x0100">
+      <Group guid="guidEventStore_VS_ToolsCmdSet" id="ProjectNodeGroup" priority="0x0100">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE"/>
+      </Group>
+      
+      <Group guid="guidEventStore_VS_ToolsCmdSet" id="ItemNodeGroup" priority="0x0101">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE"/>
       </Group>
       
 
@@ -62,10 +66,18 @@
           If you do not want an image next to your command, remove the Icon node /> -->
 
       <Button guid="guidEventStore_VS_ToolsCmdSet" id="cmdidDeployToEventStore" priority="0x0100" type="Button">
-        <Parent guid="guidEventStore_VS_ToolsCmdSet" id="MyMenuGroup" />
+        <Parent guid="guidEventStore_VS_ToolsCmdSet" id="ProjectNodeGroup" />
         <Icon guid="guidImages" id="bmpPic1" />
         <Strings>
           <ButtonText>Deploy to EventStore</ButtonText>
+        </Strings>
+      </Button>
+      
+      <Button guid="guidEventStore_VS_ToolsCmdSet" id="cmdidRunProjection" priority="0x0100" type="Button">
+        <Parent guid="guidEventStore_VS_ToolsCmdSet" id="ItemNodeGroup" />
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <ButtonText>Run Projection</ButtonText>
         </Strings>
       </Button>
 
@@ -105,9 +117,11 @@
     <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidEventStore_VS_ToolsCmdSet" value="{99a1c786-9f8c-48c9-bb7a-7839f10e0249}">
 
-      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="ProjectNodeGroup" value="0x1020" />
+      <IDSymbol name="ItemNodeGroup" value="0x1021" />
       <IDSymbol name="cmdidDeployToEventStore" value="0x0100" />
       <IDSymbol name="cmdidToolSettings" value="0x0101" />
+      <IDSymbol name="cmdidRunProjection" value="0x0110"/>
     </GuidSymbol>
     
     

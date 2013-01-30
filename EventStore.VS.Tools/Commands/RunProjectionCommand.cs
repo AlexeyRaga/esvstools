@@ -1,19 +1,19 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.Shell.Interop;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.Shell.Interop;
 
 namespace EventStore.EventStore_VS_Tools.Commands
 {
-    public sealed class DeployCommand : IVsCommand
+    public sealed class RunProjectionCommand : IVsCommand
     {
         private readonly IVsUIShell _shell;
-        public uint CmdId { get { return PkgCmdIDList.cmdidDeployToEventStore; } }
+        public uint CmdId { get { return PkgCmdIDList.cmdidRunProjection; } }
 
-        public DeployCommand(IVsUIShell shell)
+        public RunProjectionCommand(IVsUIShell shell)
         {
             _shell = shell;
         }
