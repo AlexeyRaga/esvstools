@@ -1,12 +1,10 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.ComponentModel.Design;
-using Microsoft.Win32;
-using Microsoft.VisualStudio;
+using EventStore.EventStore_VS_Tools.Commands;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Project;
 
@@ -54,29 +52,8 @@ namespace EventStore.EventStore_VS_Tools
             Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
         }
 
-        /// <summary>
-        /// This function is called when the user clicks the menu item that shows the 
-        /// tool window. See the Initialize method to see how the menu item is associated to 
-        /// this function using the OleMenuCommandService service and the MenuCommand class.
-        /// </summary>
-        private void ShowToolWindow(object sender, EventArgs e)
-        {
-            // Get the instance number 0 of this tool window. This window is single instance so this instance
-            // is actually the only one.
-            // The last flag is set to true so that if the tool window does not exists it will be created.
-            ToolWindowPane window = this.FindToolWindow(typeof(MyToolWindow), 0, true);
-            if ((null == window) || (null == window.Frame))
-            {
-                throw new NotSupportedException(Resources.CanNotCreateWindow);
-            }
-            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
-            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
-        }
-
-
         /////////////////////////////////////////////////////////////////////////////
         // Overridden Package Implementation
-        #region Package Members
 
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -87,46 +64,39 @@ namespace EventStore.EventStore_VS_Tools
             Debug.WriteLine (string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
             base.Initialize();
             RegisterProjectFactory(new ProjectionsProjectFactory(this));
-
-            // Add our command handlers for menu (commands must exist in the .vsct file)
-            OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-            if ( null != mcs )
-            {
-                // Create the command for the menu item.
-                CommandID menuCommandID = new CommandID(GuidList.guidEventStore_VS_ToolsCmdSet, (int)PkgCmdIDList.cmdidDeployToEventStore);
-                MenuCommand menuItem = new MenuCommand(MenuItemCallback, menuCommandID );
-                mcs.AddCommand( menuItem );
-                // Create the command for the tool window
-                CommandID toolwndCommandID = new CommandID(GuidList.guidEventStore_VS_ToolsCmdSet, (int)PkgCmdIDList.cmdidToolSettings);
-                MenuCommand menuToolWin = new MenuCommand(ShowToolWindow, toolwndCommandID);
-                mcs.AddCommand( menuToolWin );
-            }
+            RegisterCommands();
+            
         }
-        #endregion
 
-        /// <summary>
-        /// This function is the callback used to execute a command when the a menu item is clicked.
-        /// See the Initialize method to see how the menu item is associated to this function using
-        /// the OleMenuCommandService service and the MenuCommand class.
-        /// </summary>
-        private void MenuItemCallback(object sender, EventArgs e)
+        private IEnumerable<IVsCommand> BuildCommands()
         {
-            // Show a Message Box to prove we were here
-            IVsUIShell uiShell = (IVsUIShell)GetService(typeof(SVsUIShell));
-            Guid clsid = Guid.Empty;
-            int result;
-            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(
-                       0,
-                       ref clsid,
-                       "EventStoreTools",
-                       string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.ToString()),
-                       string.Empty,
-                       0,
-                       OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                       OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST,
-                       OLEMSGICON.OLEMSGICON_INFO,
-                       0,        // false
-                       out result));
+            var uiShell = (IVsUIShell)GetService(typeof(SVsUIShell));
+
+            yield return new DeployCommand(uiShell);
+            yield return new ToolWindowCommand(this);
+        }
+
+        private void RegisterCommands()
+        {
+            // Add our command handlers for menu (commands must exist in the .vsct file)
+            var mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+            if (null == mcs) return;
+
+            var commands = BuildCommands();
+            RegisterCommandsInService(mcs, commands);
+        }
+
+        private static void RegisterCommandsInService(IMenuCommandService commandService, IEnumerable<IVsCommand> commands)
+        {
+            if (commands == null) return;
+
+            foreach (var vsCommand in commands)
+            {
+                var commandId = new CommandID(GuidList.guidEventStore_VS_ToolsCmdSet, (int) vsCommand.CmdId);
+                var menuItem = new MenuCommand(vsCommand.Execute, commandId);
+
+                commandService.AddCommand(menuItem);
+            }
         }
 
 

@@ -121,6 +121,9 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\DeployCommand.cs" />
+    <Compile Include="Commands\IVsCommand.cs" />
+    <Compile Include="Commands\ToolWindowCommand.cs" />
     <Compile Include="MyControl.xaml.cs">
       <DependentUpon>MyControl.xaml</DependentUpon>
     </Compile>
