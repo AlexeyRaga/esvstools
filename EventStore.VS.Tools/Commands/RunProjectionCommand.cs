@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventStore.EventStore_VS_Tools.Commands
+namespace EventStore.VS.Tools.Commands
 {
     public sealed class RunProjectionCommand : IVsCommand
     {

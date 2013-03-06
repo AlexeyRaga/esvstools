@@ -10,6 +10,10 @@
     <DefaultName>Projections</DefaultName>
     <ProvideDefaultName>true</ProvideDefaultName>
     <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+    <WizardExtension>
+      <Assembly>EventStore.VS.Tools</Assembly>
+      <FullClassName>EventStore.VS.Tools.ProjectWizard</FullClassName>
+    </WizardExtension>
   </TemplateData>
   <TemplateContent>
     <Project File="Projections.espproj" ReplaceParameters="true">

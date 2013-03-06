@@ -4,14 +4,14 @@ using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using System;
 using System.ComponentModel.Design;
 
-namespace EventStore.EventStore_VS_Tools
+namespace EventStore.VS.Tools
 {
     [Guid(GuidList.guidEventStore_VS_ProjectionsProjectString)]
     public sealed class ProjectionsProjectFactory : ProjectFactory
     {
-        private readonly EventStore_VS_ToolsPackage _package;
+        private readonly EventStorePackage _package;
 
-        public ProjectionsProjectFactory(EventStore_VS_ToolsPackage package)
+        public ProjectionsProjectFactory(EventStorePackage package)
             : base(package)
         {
             _package = package;

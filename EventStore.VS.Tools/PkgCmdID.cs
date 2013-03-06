@@ -2,7 +2,7 @@
 // MUST match PkgCmdID.h
 using System;
 
-namespace EventStore.EventStore_VS_Tools
+namespace EventStore.VS.Tools
 {
     static class PkgCmdIDList
     {

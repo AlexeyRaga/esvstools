@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace EventStore.EventStore_VS_Tools
+namespace EventStore.VS.Tools
 {
     /// <summary>
     /// Interaction logic for MyControl.xaml

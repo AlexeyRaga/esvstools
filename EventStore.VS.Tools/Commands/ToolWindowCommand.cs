@@ -1,14 +1,14 @@
 ﻿using System;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace EventStore.EventStore_VS_Tools.Commands
+namespace EventStore.VS.Tools.Commands
 {
     public sealed class ToolWindowCommand : IVsCommand
     {
-        private readonly EventStore_VS_ToolsPackage _package;
+        private readonly EventStorePackage _package;
         public uint CmdId { get { return PkgCmdIDList.cmdidToolSettings; } }
 
-        public ToolWindowCommand(EventStore_VS_ToolsPackage package)
+        public ToolWindowCommand(EventStorePackage package)
         {
             _package = package;
         }

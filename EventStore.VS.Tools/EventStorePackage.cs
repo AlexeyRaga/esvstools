@@ -3,12 +3,14 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.ComponentModel.Design;
-using EventStore.EventStore_VS_Tools.Commands;
+using EventStore.VS.Tools.Commands;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Project;
+using EventStore.VS.Tools.PropertyPages;
+using System;
 
-namespace EventStore.EventStore_VS_Tools
+namespace EventStore.VS.Tools
 {
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -37,8 +39,11 @@ namespace EventStore.EventStore_VS_Tools
         "espproj", "espproj",
         @".\\NullPath",
         LanguageVsTemplate = "EventStore")]
+
+    [ProvideObject(typeof(DeployPropertyPage))]
+    [ProvideObject(typeof(GeneralPropertyPage))]
     [Guid(GuidList.guidEventStore_VS_ToolsPkgString)]
-    public sealed class EventStore_VS_ToolsPackage : ProjectPackage
+    public sealed class EventStorePackage : ProjectPackage
     {
         /// <summary>
         /// Default constructor of the package.
@@ -47,10 +52,11 @@ namespace EventStore.EventStore_VS_Tools
         /// not sited yet inside Visual Studio environment. The place to do all the other 
         /// initialization is the Initialize method.
         /// </summary>
-        public EventStore_VS_ToolsPackage()
+        public EventStorePackage()
         {
             Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
         }
+
 
         /////////////////////////////////////////////////////////////////////////////
         // Overridden Package Implementation

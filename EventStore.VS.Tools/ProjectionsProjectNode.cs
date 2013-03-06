@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.IO;
 using Microsoft.VisualStudio.Project;
 using Microsoft.VisualStudio;
 using VsCommands = Microsoft.VisualStudio.VSConstants.VSStd97CmdID;
@@ -7,16 +9,31 @@ using System.Diagnostics;
 using System.ComponentModel.Design;
 using Microsoft.VisualStudio.Shell.Interop;
 using System.Globalization;
+using EventStore.VS.Tools.PropertyPages;
 
-namespace EventStore.EventStore_VS_Tools
+namespace EventStore.VS.Tools
 {
     public class ProjectionsProjectNode : ProjectNode
     {
-        private readonly EventStore_VS_ToolsPackage _package;
+        private readonly EventStorePackage _package;
 
-        public ProjectionsProjectNode(EventStore_VS_ToolsPackage package)
+        public ProjectionsProjectNode(EventStorePackage package)
         {
             _package = package;
+            SupportsProjectDesigner = true;
+            InitializeCATIDs();
+        }
+
+        private void InitializeCATIDs()
+        {
+            AddCATIDMapping(typeof(GeneralPropertyPage), typeof(GeneralPropertyPage).GUID);
+            AddCATIDMapping(typeof(DeployPropertyPage), typeof(DeployPropertyPage).GUID);
+
+            AddCATIDMapping(typeof(ProjectionFileNodeProperties), typeof(ProjectionFileNodeProperties).GUID);
+            AddCATIDMapping(typeof(FileNodeProperties), typeof(ProjectionFileNodeProperties).GUID);
+
+            AddCATIDMapping(typeof(ProjectNodeProperties), typeof(ProjectionsProjectNodeProperties).GUID);
+            AddCATIDMapping(typeof(ProjectionsProjectNodeProperties), typeof(ProjectionsProjectNodeProperties).GUID);
         }
 
         public override Guid ProjectGuid
@@ -26,7 +43,7 @@ namespace EventStore.EventStore_VS_Tools
 
         public override string ProjectType
         {
-            get { return this.GetType().Name; }
+            get { return GetType().Name; }
         }
 
         public override void AddFileFromTemplate(
@@ -36,20 +53,41 @@ namespace EventStore.EventStore_VS_Tools
             FileTemplateProcessor.Reset();
         }
 
-        //protected override Guid[] GetConfigurationIndependentPropertyPages()
-        //{
-        //    var result = new Guid[1];
-        //    result[0] = typeof(GeneralPropertyPage).GUID;
-        //    return result;
-        //}
-        //protected override Guid[] GetPriorityProjectDesignerPages()
-        //{
-        //    var result = new Guid[1];
-        //    result[0] = typeof(GeneralPropertyPage).GUID;
-        //    return result;
-        //}
+        protected override NodeProperties CreatePropertiesObject()
+        {
+            var properties = new ProjectionsProjectNodeProperties(this);
+            //properties.OnCustomToolChanged += new EventHandler<HierarchyNodeEventArgs>(OnCustomToolChanged);
+            //properties.OnCustomToolNameSpaceChanged += new EventHandler<HierarchyNodeEventArgs>(OnCustomToolNameSpaceChanged);
+            return properties;
+        }
+
+        public override FileNode CreateFileNode(ProjectElement item)
+        {
+            if (item == null)
+            {
+                throw new ArgumentNullException("item");
+            }
+
+            var newNode = new ProjectionFileNode(this, item);
+
+            return newNode;
+        }
 
 
+        protected override Guid[] GetConfigurationIndependentPropertyPages()
+        {
+            return new[] {typeof (GeneralPropertyPage).GUID, typeof (DeployPropertyPage).GUID};
+        }
+
+        protected override Guid[] GetConfigurationDependentPropertyPages()
+        {
+            return new[] {typeof (GeneralPropertyPage).GUID, typeof (DeployPropertyPage).GUID};
+        }
+
+        protected override Guid[] GetPriorityProjectDesignerPages()
+        {
+            return new[] { typeof(GeneralPropertyPage).GUID, typeof(DeployPropertyPage).GUID };
+        }
 
         //protected override int ExecCommandOnNode(Guid cmdGroup, uint cmd, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         //{

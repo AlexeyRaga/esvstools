@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace EventStore.EventStore_VS_Tools.Commands
+namespace EventStore.VS.Tools.Commands
 {
     public sealed class DeployCommand : IVsCommand
     {
@@ -26,7 +26,6 @@ namespace EventStore.EventStore_VS_Tools.Commands
                        0,
                        ref clsid,
                        "EventStoreTools",
-                       string.Format(CultureInfo.CurrentCulture, "Executing {0}", this.GetType().Name),
                        string.Empty,
                        0,
                        OLEMSGBUTTON.OLEMSGBUTTON_OK,

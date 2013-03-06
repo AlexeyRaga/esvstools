@@ -2,7 +2,7 @@
 // MUST match guids.h
 using System;
 
-namespace EventStore.EventStore_VS_Tools
+namespace EventStore.VS.Tools
 {
     static class GuidList
     {
@@ -14,5 +14,11 @@ namespace EventStore.EventStore_VS_Tools
 
         public static readonly Guid guidEventStore_VS_ToolsCmdSet = new Guid(guidEventStore_VS_ToolsCmdSetString);
         public static readonly Guid guidEventStore_VS_ProjectionsProject = new Guid(guidEventStore_VS_ProjectionsProjectString);
+
+        public const string guidGeneralPropertyPage = "131DEA5D-FFDF-4499-AFE5-5B5A2640A921";
+        public const string guidDeployPropertyPage = "C8C29102-2DC5-4F2F-B276-25A880C856BA";
+
+        public const string guidProjectionFileProperties = "01EBE871-0280-45F5-B2CD-24FB42985C55";
+        public const string guidProjectionsProjectProperties = "B20EF74F-60C6-484B-99D0-CF7D010F8267";
     };
 }

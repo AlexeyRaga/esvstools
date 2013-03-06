@@ -80,10 +80,10 @@ namespace Microsoft.VisualStudio.Project
                 throw new ArgumentNullException("projectNode");
             }
 
-            if (projectNode.CallMSBuild("GetFrameworkPaths") != MSBuildResult.Successful)
-            {
-                throw new InvalidOperationException("Build of GetFrameworkPaths failed.");
-            }
+            //if (projectNode.CallMSBuild("GetFrameworkPaths") != MSBuildResult.Successful)
+            //{
+            //    throw new InvalidOperationException("Build of GetFrameworkPaths failed.");
+            //}
 
             this.rarInputs = new RarInputs(projectNode.CurrentConfig);
         }
