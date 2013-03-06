@@ -45,13 +45,14 @@ namespace EventStore.VS.Tools
     [Guid(GuidList.guidEventStore_VS_ToolsPkgString)]
     public sealed class EventStorePackage : ProjectPackage
     {
-        /// <summary>
-        /// Default constructor of the package.
-        /// Inside this method you can place any initialization code that does not require 
-        /// any Visual Studio service because at this point the package object is created but 
-        /// not sited yet inside Visual Studio environment. The place to do all the other 
-        /// initialization is the Initialize method.
-        /// </summary>
+        private readonly IDictionary<uint, IVsCommand> _commands = new Dictionary<uint, IVsCommand>(); 
+
+        public IVsCommand FindCommand(uint commandId)
+        {
+            IVsCommand command;
+            return !_commands.TryGetValue(commandId, out command) ? null : command;
+        }
+
         public EventStorePackage()
         {
             Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
@@ -90,21 +91,23 @@ namespace EventStore.VS.Tools
             if (null == mcs) return;
 
             var commands = BuildCommands();
-            RegisterCommandsInService(mcs, commands);
-        }
-
-        private static void RegisterCommandsInService(IMenuCommandService commandService, IEnumerable<IVsCommand> commands)
-        {
-            if (commands == null) return;
-
             foreach (var vsCommand in commands)
             {
-                var commandId = new CommandID(GuidList.guidEventStore_VS_ToolsCmdSet, (int) vsCommand.CmdId);
-                var menuItem = new MenuCommand(vsCommand.Execute, commandId);
-
-                commandService.AddCommand(menuItem);
+                _commands.Add(vsCommand.CmdId, vsCommand);
             }
         }
+
+        //private static void RegisterCommandsInService(IMenuCommandService commandService, IEnumerable<IVsCommand> commands)
+        //{
+        //    if (commands == null) return;
+
+        //    foreach (var vsCommand in commands)
+        //    {
+        //        var commandId = new CommandID(GuidList.guidEventStore_VS_ToolsCmdSet, (int) vsCommand.CmdId);
+        //        var menuItem = new MenuCommand(vsCommand.Execute, commandId);
+        //        commandService.AddCommand(menuItem);
+        //    }
+        //}
 
 
         public override string ProductUserContext

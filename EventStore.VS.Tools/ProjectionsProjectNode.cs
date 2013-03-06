@@ -20,20 +20,20 @@ namespace EventStore.VS.Tools
         public ProjectionsProjectNode(EventStorePackage package)
         {
             _package = package;
-            SupportsProjectDesigner = true;
+            //SupportsProjectDesigner = true;
             InitializeCATIDs();
         }
 
         private void InitializeCATIDs()
         {
-            AddCATIDMapping(typeof(GeneralPropertyPage), typeof(GeneralPropertyPage).GUID);
-            AddCATIDMapping(typeof(DeployPropertyPage), typeof(DeployPropertyPage).GUID);
+            //AddCATIDMapping(typeof(GeneralPropertyPage), typeof(GeneralPropertyPage).GUID);
+            //AddCATIDMapping(typeof(DeployPropertyPage), typeof(DeployPropertyPage).GUID);
 
-            AddCATIDMapping(typeof(ProjectionFileNodeProperties), typeof(ProjectionFileNodeProperties).GUID);
-            AddCATIDMapping(typeof(FileNodeProperties), typeof(ProjectionFileNodeProperties).GUID);
+            //AddCATIDMapping(typeof(ProjectionFileNodeProperties), typeof(ProjectionFileNodeProperties).GUID);
+            //AddCATIDMapping(typeof(FileNodeProperties), typeof(ProjectionFileNodeProperties).GUID);
 
-            AddCATIDMapping(typeof(ProjectNodeProperties), typeof(ProjectionsProjectNodeProperties).GUID);
-            AddCATIDMapping(typeof(ProjectionsProjectNodeProperties), typeof(ProjectionsProjectNodeProperties).GUID);
+            //AddCATIDMapping(typeof(ProjectNodeProperties), typeof(ProjectionsProjectNodeProperties).GUID);
+            //AddCATIDMapping(typeof(ProjectionsProjectNodeProperties), typeof(ProjectionsProjectNodeProperties).GUID);
         }
 
         public override Guid ProjectGuid
@@ -73,33 +73,43 @@ namespace EventStore.VS.Tools
             return newNode;
         }
 
-
         protected override Guid[] GetConfigurationIndependentPropertyPages()
         {
-            return new[] {typeof (GeneralPropertyPage).GUID, typeof (DeployPropertyPage).GUID};
-        }
-
-        protected override Guid[] GetConfigurationDependentPropertyPages()
-        {
-            return new[] {typeof (GeneralPropertyPage).GUID, typeof (DeployPropertyPage).GUID};
+            return new[] {typeof (GeneralPropertyPage).GUID};
         }
 
         protected override Guid[] GetPriorityProjectDesignerPages()
         {
-            return new[] { typeof(GeneralPropertyPage).GUID, typeof(DeployPropertyPage).GUID };
+            Guid[] result = new Guid[1];
+            result[0] = typeof(GeneralPropertyPage).GUID;
+            return result;
         }
 
-        //protected override int ExecCommandOnNode(Guid cmdGroup, uint cmd, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
+        //protected override Guid[] GetConfigurationIndependentPropertyPages()
         //{
-        //    if (cmdGroup == GuidList.ProjectionsCmdSet)
-        //    {
-        //        if (cmd == (uint)ProjectMenus.DeployToEventStore.ID)
-        //        {
-        //            Debug.WriteLine("Deploying!");
-        //        }
-        //    }
-        //    return base.ExecCommandOnNode(cmdGroup, cmd, nCmdexecopt, pvaIn, pvaOut);
+        //    return new[] {typeof (GeneralPropertyPage).GUID, typeof (DeployPropertyPage).GUID};
         //}
+
+        protected override Guid[] GetConfigurationDependentPropertyPages()
+        {
+            return new[] { typeof(DeployPropertyPage).GUID };
+        }
+
+        //protected override Guid[] GetPriorityProjectDesignerPages()
+        //{
+        //    return new[] { typeof(GeneralPropertyPage).GUID, typeof(DeployPropertyPage).GUID };
+        //}
+
+        protected override int ExecCommandOnNode(Guid cmdGroup, uint cmd, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
+        {
+            if (cmdGroup == GuidList.guidEventStore_VS_ToolsCmdSet)
+            {
+                var command = _package.FindCommand(cmd);
+                if (command != null) command.Execute(this);
+                return VSConstants.S_OK;
+            }
+            return base.ExecCommandOnNode(cmdGroup, cmd, nCmdexecopt, pvaIn, pvaOut);
+        }
 
         //protected override int QueryStatusOnNode(Guid cmdGroup, uint cmd, IntPtr pCmdText, ref QueryStatusResult result)
         //{

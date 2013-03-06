@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.Shell.Interop;
+﻿using Microsoft.VisualStudio.Project;
+using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -18,15 +19,16 @@ namespace EventStore.VS.Tools.Commands
             _shell = shell;
         }
 
-        public void Execute(object sender, EventArgs eventArgs)
+        public void Execute(HierarchyNode node)
         {
+            var fileNode = (ProjectionFileNode) node;
             var clsid = Guid.Empty;
             int result;
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(_shell.ShowMessageBox(
                        0,
                        ref clsid,
                        "EventStoreTools",
-                       string.Format(CultureInfo.CurrentCulture, "Executing {0}", this.GetType().Name),
+                       string.Format(CultureInfo.CurrentCulture, "Executing {0}", fileNode.FileName),
                        string.Empty,
                        0,
                        OLEMSGBUTTON.OLEMSGBUTTON_OK,

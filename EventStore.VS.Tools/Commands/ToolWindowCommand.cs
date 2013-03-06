@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.VisualStudio.Project;
 using Microsoft.VisualStudio.Shell.Interop;
 
 namespace EventStore.VS.Tools.Commands
@@ -13,7 +14,7 @@ namespace EventStore.VS.Tools.Commands
             _package = package;
         }
 
-        public void Execute(object sender, EventArgs eventArgs)
+        public void Execute(HierarchyNode node)
         {
             // Get the instance number 0 of this tool window. This window is single instance so this instance
             // is actually the only one.
