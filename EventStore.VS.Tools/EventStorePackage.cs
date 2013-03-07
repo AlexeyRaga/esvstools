@@ -77,11 +77,9 @@ namespace EventStore.VS.Tools
 
         private IEnumerable<IVsCommand> BuildCommands()
         {
-            var uiShell = (IVsUIShell)GetService(typeof(SVsUIShell));
-
-            yield return new DeployCommand(uiShell);
+            yield return new DeployCommand(this);
             yield return new ToolWindowCommand(this);
-            yield return new RunProjectionCommand(uiShell);
+            yield return new RunProjectionCommand(this);
         }
 
         private void RegisterCommands()

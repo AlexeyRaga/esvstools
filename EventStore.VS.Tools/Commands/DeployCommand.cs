@@ -9,17 +9,15 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace EventStore.VS.Tools.Commands
 {
-    public sealed class DeployCommand : IVsCommand
+    public sealed class DeployCommand : CommandBase
     {
-        private readonly IVsUIShell _shell;
-        public uint CmdId { get { return PkgCmdIDList.cmdidDeployToEventStore; } }
+        public override uint CmdId { get { return PkgCmdIDList.cmdidDeployToEventStore; } }
 
-        public DeployCommand(IVsUIShell shell)
+        public DeployCommand(EventStorePackage package) : base(package)
         {
-            _shell = shell;
         }
 
-        public void Execute(HierarchyNode node)
+        public override void Execute(HierarchyNode node)
         {
             var projectNode = (ProjectionsProjectNode) node;
 
@@ -32,20 +30,7 @@ namespace EventStore.VS.Tools.Commands
         private void ShowNames(IEnumerable<ProjectionFileNode> files)
         {
             var names = String.Join(", ", files.Select(x => x.FileName));
-            var clsid = Guid.Empty;
-            int result;
-            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(_shell.ShowMessageBox(
-                       0,
-                       ref clsid,
-                       "EventStoreTools",
-                       names,
-                       string.Empty,
-                       0,
-                       OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                       OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST,
-                       OLEMSGICON.OLEMSGICON_INFO,
-                       0,        // false
-                       out result));
+            WriteOutput(names);
         }
     }
 }
