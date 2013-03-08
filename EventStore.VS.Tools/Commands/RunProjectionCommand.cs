@@ -1,4 +1,8 @@
-﻿using Microsoft.VisualStudio.Project;
+﻿using System.IO;
+using EventStore.ClientAPI;
+using EventStore.VS.Tools.EventStoreServices;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Project;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Collections.Generic;
@@ -23,13 +27,35 @@ namespace EventStore.VS.Tools.Commands
             var fileNode = (ProjectionFileNode) node;
             var connectionString = node.ProjectMgr.CurrentConfig.GetPropertyValue("ESConnectionString");
 
+            ClearOutput();
+
             if (String.IsNullOrWhiteSpace(connectionString))
             {
                 ShowErrorDialog("EventStore connection is not specified");
                 return;
             }
 
-            WriteOutput("Would deploy {0} into {1}", fileNode.FileName, connectionString);
+            var endpoint = EventStoreConnectionFactory.GetEventStoreEndPoint(connectionString);
+            var projectionManager = new ProjectionsManager(endpoint);
+
+            var query = File.ReadAllText(fileNode.Url);
+
+            WriteOutput("Deploying {0}...", fileNode.FileName);
+
+            try
+            {
+                projectionManager.CreateContinuous(Path.GetFileNameWithoutExtension(fileNode.FileName), query);
+            }
+            catch (Exception ex)
+            {
+                WriteOutputLine("\tFAILED!");
+                WriteOutputLine("\t{0}", ex);
+                throw;
+            }
+            //projectionManager.CreateOneTime(query);
+
+
+            WriteOutputLine("\tSuccessful.");
         }
 
     }

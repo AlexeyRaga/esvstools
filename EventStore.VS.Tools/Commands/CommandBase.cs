@@ -21,11 +21,21 @@ namespace EventStore.VS.Tools.Commands
             Shell = (IVsUIShell)Package.GetGlobalService(typeof(SVsUIShell));
         }
 
+        protected void ClearOutput()
+        {
+            Output.Pane.Clear();
+        }
+
         protected void WriteOutput(string message, params object[] parameters)
         {
-            if (!message.EndsWith(Environment.NewLine)) message += Environment.NewLine;
             Output.Pane.OutputStringThreadSafe(String.Format(message, parameters));
             Output.Pane.Activate();
+        }
+
+        protected void WriteOutputLine(string message, params object[] parameters)
+        {
+            message = message + Environment.NewLine;
+            WriteOutput(message, parameters);
         }
 
         protected void ShowErrorDialog(string message)

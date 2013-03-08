@@ -1,0 +1,13 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">   
+	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" /> 
+  
+	<Target Name="AfterBuild" BeforeTargets="GeneratePkgDef"> 
+		<CreateItem Include="@(ReferencePath)" Condition="'%(CopyLocal)'=='true' and '%(ReferencePath.IlMerge)'=='true'"> 
+			<Output TaskParameter="Include" ItemName="IlmergeAssemblies"/> 
+		</CreateItem> 
+
+		<Message Text="MERGING: @(IlmergeAssemblies->'%(Filename)')" Importance="High" /> 
+		<Exec Command="&quot;$(SolutionDir)Build\Ilmerge.exe&quot; /keyfile:Key.snk /targetplatform:v4,&quot;$(ProgramFiles)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0&quot; /lib:&quot;$(ProgramFiles)\Microsoft Visual Studio 11.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0&quot; /out:@(MainAssembly) &quot;@(IntermediateAssembly)&quot; @(IlmergeAssemblies->'&quot;%(FullPath)&quot;', ' ')" /> 
+  </Target> 
+  <Target Name="_CopyFilesMarkedCopyLocal"/> 
+</Project>
