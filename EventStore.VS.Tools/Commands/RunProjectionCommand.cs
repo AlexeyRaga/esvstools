@@ -36,7 +36,7 @@ namespace EventStore.VS.Tools.Commands
             }
 
             var endpoint = EventStoreConnectionFactory.GetEventStoreEndPoint(connectionString);
-            var projectionManager = new ProjectionsManager(endpoint);
+            var projectionManager = new ProjectionsManager(new EventStoreLogger(), endpoint);
 
             var query = File.ReadAllText(fileNode.Url);
 
@@ -57,6 +57,5 @@ namespace EventStore.VS.Tools.Commands
 
             WriteOutputLine("\tSuccessful.");
         }
-
     }
 }

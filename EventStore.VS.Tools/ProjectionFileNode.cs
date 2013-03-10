@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,8 @@ namespace EventStore.VS.Tools
     public sealed class ProjectionFileNode : FileNode
     {
         private readonly ProjectionsProjectNode _project;
+
+        public string Name { get { return Path.GetFileNameWithoutExtension(FileName); } }
 
         public ProjectionFileNode(ProjectionsProjectNode project, ProjectElement element) : base(project, element)
         {
