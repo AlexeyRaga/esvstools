@@ -20,7 +20,7 @@ namespace EventStore.VS.Tools.Commands
         {
         }
 
-        public void Execute(HierarchyNode node)
+        public override void Execute(HierarchyNode node)
         {
             var projectNode = (ProjectionsProjectNode) node;
             var projectionNodes = new List<ProjectionFileNode>();
