@@ -20,12 +20,7 @@ namespace EventStore.VS.Tools.Commands
         {
         }
 
-        public override void Execute(HierarchyNode node)
-        {
-            ExecuteAsync(node).Wait();
-        }
-
-        public async Task ExecuteAsync(HierarchyNode node)
+        public void Execute(HierarchyNode node)
         {
             var projectNode = (ProjectionsProjectNode) node;
             var projectionNodes = new List<ProjectionFileNode>();
