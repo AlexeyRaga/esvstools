@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using System.ComponentModel.Design;
 using EventStore.VS.Tools.Commands;
+using EventStore.VS.Tools.EventStore;
 using EventStore.VS.Tools.Infrastructure;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Project;
@@ -63,8 +64,14 @@ namespace EventStore.VS.Tools
         {
             base.Initialize();
             RegisterProjectFactory(new ProjectionsProjectFactory(this));
+            SubscribeConsumers();
             RegisterCommands();
             
+        }
+
+        private void SubscribeConsumers()
+        {
+            _dispatcher.Subscribe(new ProjectionDeploymentAgent());
         }
 
         private IEnumerable<IVsCommand> BuildCommands()

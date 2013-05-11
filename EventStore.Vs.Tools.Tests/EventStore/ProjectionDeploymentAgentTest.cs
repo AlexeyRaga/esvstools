@@ -21,8 +21,8 @@ namespace EventStore.Vs.Tools.Tests.EventStore
 
             var httpClient = new FakeHttpClient(u => new HttpResponse(HttpStatusCode.OK, String.Empty, new NameValueCollection()), null, null);
 
-            var agent = new ProjectionDeploymentAgent(_endPoint, httpClient);
-            agent.Consume(new DeployProjection(projectionName, projectionContent));
+            var agent = new ProjectionDeploymentAgent(httpClient);
+            agent.Consume(new DeployProjection(_endPoint, projectionName, projectionContent));
 
             CollectionAssert.IsEmpty(httpClient.PostRequests);
             CollectionAssert.IsNotEmpty(httpClient.GetRequests);
@@ -40,8 +40,8 @@ namespace EventStore.Vs.Tools.Tests.EventStore
 
             var httpClient = new FakeHttpClient(u => new HttpResponse(HttpStatusCode.NotFound, String.Empty, new NameValueCollection()), null, null);
 
-            var agent = new ProjectionDeploymentAgent(_endPoint, httpClient);
-            agent.Consume(new DeployProjection(projectionName, projectionContent));
+            var agent = new ProjectionDeploymentAgent(httpClient);
+            agent.Consume(new DeployProjection(_endPoint, projectionName, projectionContent));
 
             CollectionAssert.IsEmpty(httpClient.PutRequests);
             CollectionAssert.IsNotEmpty(httpClient.GetRequests);
@@ -61,8 +61,8 @@ namespace EventStore.Vs.Tools.Tests.EventStore
 
             var httpClient = new FakeHttpClient(u => response, (u, d) => response, (u, d) => response);
 
-            var agent = new ProjectionDeploymentAgent(_endPoint, httpClient);
-            agent.Consume(new DeployProjection(projectionName, projectionContent));
+            var agent = new ProjectionDeploymentAgent(httpClient);
+            agent.Consume(new DeployProjection(_endPoint, projectionName, projectionContent));
         }
     }
 }

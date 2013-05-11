@@ -135,7 +135,8 @@
     <Compile Include="Commands\DeployCommand.cs" />
     <Compile Include="Commands\IVsCommand.cs" />
     <Compile Include="Commands\ToolWindowCommand.cs" />
-    <Compile Include="EventStoreServices\EventStoreConnectionFactory.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="EventStore\EventStoreEndPoint.cs" />
     <Compile Include="EventStore\EventStoreConnectionException.cs" />
     <Compile Include="Infrastructure\DowncastingConsumer.cs" />
     <Compile Include="Infrastructure\HttpExtensions.cs" />
@@ -144,7 +145,7 @@
     <Compile Include="EventStore\ProjectionDeploymentAgent.cs" />
     <Compile Include="Infrastructure\IConsume.cs" />
     <Compile Include="Infrastructure\IPublish.cs" />
-    <Compile Include="Infrastructure\Messages.cs" />
+    <Compile Include="Infrastructure\IMessage.cs" />
     <Compile Include="EventStore\Messages.cs" />
     <Compile Include="Infrastructure\Multiplexer.cs" />
     <Compile Include="Infrastructure\TypeBaseDispatcher.cs" />

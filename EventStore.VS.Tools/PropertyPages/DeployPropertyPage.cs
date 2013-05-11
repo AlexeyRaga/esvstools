@@ -1,26 +1,9 @@
-//-------------------------------------------------------------------------------------------------
-// <copyright file="WixPathsPropertyPage.cs" company="Outercurve Foundation">
-//   Copyright (c) 2004, Outercurve Foundation.
-//   This software is released under Microsoft Reciprocal License (MS-RL).
-//   The license and further copyright text can be found in the file
-//   LICENSE.TXT at the root directory of the distribution.
-// </copyright>
-// 
-// <summary>
-// Contains the WixPathsPropertyPage class.
-// </summary>
-//-------------------------------------------------------------------------------------------------
-
 using System.ComponentModel;
 
 namespace EventStore.VS.Tools.PropertyPages
 {
     using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.Project;
-    using System;
-    using System.Collections.Generic;
     using System.Runtime.InteropServices;
-    using System.Text;
 
     /// <summary>
     /// Property page for the include and reference paths
@@ -43,16 +26,16 @@ namespace EventStore.VS.Tools.PropertyPages
 
         public DeployPropertyPage()
         {
-            this.Name = "Event Store Connection";
+            Name = "Event Store Connection";
         }
         protected override void BindProperties()
         {
-            this._connectionString = this.GetConfigProperty("ESConnectionString");
+            _connectionString = GetConfigProperty(Constants.EventStore.ConnectionString);
         }
 
         protected override int ApplyChanges()
         {
-            this.SetConfigProperty("ESConnectionString", _connectionString);
+            SetConfigProperty(Constants.EventStore.ConnectionString, _connectionString);
             return VSConstants.S_OK;
         }
     }

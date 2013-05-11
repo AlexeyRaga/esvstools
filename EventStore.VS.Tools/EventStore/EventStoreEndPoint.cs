@@ -1,12 +1,23 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using Microsoft.VisualStudio.Project;
 
-namespace EventStore.VS.Tools.EventStoreServices
+namespace EventStore.VS.Tools.EventStore
 {
-    public sealed class EventStoreConnectionFactory
+    public sealed class EventStoreEndPoint
     {
-        public static IPEndPoint GetEventStoreEndPoint(string connectionString)
+        public static IPEndPoint Get(ProjectNode projectNode)
+        {
+            var connectionString = projectNode.CurrentConfig.GetPropertyValue(Constants.EventStore.ConnectionString);
+            if (String.IsNullOrWhiteSpace(connectionString))
+                throw new EventStoreConnectionException(
+                    "Unable to connect to the EventStore. Connection string is not specified.",
+                    HttpStatusCode.ServiceUnavailable);
+
+            return Get(connectionString);
+        }
+        public static IPEndPoint Get(string connectionString)
         {
 
             if (String.IsNullOrWhiteSpace(connectionString))

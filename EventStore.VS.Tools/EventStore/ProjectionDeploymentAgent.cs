@@ -7,26 +7,24 @@ namespace EventStore.VS.Tools.EventStore
     public sealed class ProjectionDeploymentAgent : IConsume<DeployProjection>
     {
         private readonly IHttpClient _httpClient;
-        private readonly IPEndPoint _eventStoreEndpoint;
 
-        public ProjectionDeploymentAgent(IPEndPoint eventStoreEndpoint, IHttpClient httpClient)
+        public ProjectionDeploymentAgent(IHttpClient httpClient)
         {
             if (httpClient == null) throw new ArgumentNullException("httpClient");
-            if (eventStoreEndpoint == null) throw new ArgumentNullException("eventStoreEndpoint");
-
             _httpClient = httpClient;
-            _eventStoreEndpoint = eventStoreEndpoint;
         }
+
+        public ProjectionDeploymentAgent() : this(new HttpClient()) { }
 
         public void Consume(DeployProjection message)
         {
-            if (ProjectionExistsInEventStore(message.Name))
-                UpdateProjection(message.Name, message.Content);
+            if (ProjectionExistsInEventStore(message.EventStoreEndPoint, message.Name))
+                UpdateProjection(message.EventStoreEndPoint, message.Name, message.Content);
             else
-                CreateProjection(message.Name, message.Content);
+                CreateProjection(message.EventStoreEndPoint, message.Name, message.Content);
         }
 
-        private void CreateProjection(string projectionName, string content)
+        private void CreateProjection(IPEndPoint endpoint, string projectionName, string content)
         {
             const string isEmitEnabled = "no";
             const string isCheckpointEnabled = "yes";
@@ -34,7 +32,7 @@ namespace EventStore.VS.Tools.EventStore
             var projectionLocation = String.Format("/projections/continuous?name={0}&type=JS&emit={1}&checkpoints={2}&enabled={3}",
                 projectionName, isEmitEnabled, isCheckpointEnabled, isEnabled);
 
-            var projectionUri = _eventStoreEndpoint.ToHttpUrl(projectionLocation);
+            var projectionUri = endpoint.ToHttpUrl(projectionLocation);
 
             var result = _httpClient.Post(projectionUri, content);
 
@@ -44,10 +42,10 @@ namespace EventStore.VS.Tools.EventStore
                     result.StatusCode);
         }
 
-        private void UpdateProjection(string projectionName, string content)
+        private void UpdateProjection(IPEndPoint endpoint, string projectionName, string content)
         {
             var projectionLocation = "/projection/" + projectionName + "/query?type=JS";
-            var locationUri = _eventStoreEndpoint.ToHttpUrl(projectionLocation);
+            var locationUri = endpoint.ToHttpUrl(projectionLocation);
 
             var result = _httpClient.Put(locationUri, content);
             if (result.StatusCode != HttpStatusCode.OK && result.StatusCode != HttpStatusCode.Accepted)
@@ -56,11 +54,11 @@ namespace EventStore.VS.Tools.EventStore
                     result.StatusCode);
         }
 
-        private bool ProjectionExistsInEventStore(string projectionName)
+        private bool ProjectionExistsInEventStore(IPEndPoint endpoint, string projectionName)
         {
             var projectionLocation = "/projection/" + projectionName + "/query";
 
-            var locaionUri = _eventStoreEndpoint.ToHttpUrl(projectionLocation);
+            var locaionUri = endpoint.ToHttpUrl(projectionLocation);
             var response = _httpClient.Get(locaionUri);
 
             return response.StatusCode == HttpStatusCode.OK;

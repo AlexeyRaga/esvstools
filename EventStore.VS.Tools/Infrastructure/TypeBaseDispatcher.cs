@@ -19,7 +19,7 @@ namespace EventStore.VS.Tools.Infrastructure
         {
             var downcaster = new DowncastingConsumer<TBase, T>(consumer);
             _subscribers.AddOrUpdate(typeof (T),
-                                     _ => new Multiplexer<TBase>(),
+                                     _ => new Multiplexer<TBase>(downcaster),
                                      (_, m) => { m.Attach(downcaster); return m; });
         }
     }
