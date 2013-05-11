@@ -6,8 +6,8 @@ namespace EventStore.VS.Tools.EventStore
 {
     public sealed class ProjectionDeploymentAgent : IConsume<DeployProjection>
     {
-        private IHttpClient _httpClient;
-        private IPEndPoint _eventStoreEndpoint;
+        private readonly IHttpClient _httpClient;
+        private readonly IPEndPoint _eventStoreEndpoint;
 
         public ProjectionDeploymentAgent(IPEndPoint eventStoreEndpoint, IHttpClient httpClient)
         {
