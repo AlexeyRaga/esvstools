@@ -137,13 +137,17 @@
     <Compile Include="Commands\ToolWindowCommand.cs" />
     <Compile Include="EventStoreServices\EventStoreConnectionFactory.cs" />
     <Compile Include="EventStore\EventStoreConnectionException.cs" />
+    <Compile Include="Infrastructure\DowncastingConsumer.cs" />
     <Compile Include="Infrastructure\HttpExtensions.cs" />
     <Compile Include="EventStoreServices\ProjectionsManagerLight.cs" />
     <Compile Include="Infrastructure\HttpClient.cs" />
     <Compile Include="EventStore\ProjectionDeploymentAgent.cs" />
     <Compile Include="Infrastructure\IConsume.cs" />
+    <Compile Include="Infrastructure\IPublish.cs" />
     <Compile Include="Infrastructure\Messages.cs" />
     <Compile Include="EventStore\Messages.cs" />
+    <Compile Include="Infrastructure\Multiplexer.cs" />
+    <Compile Include="Infrastructure\TypeBaseDispatcher.cs" />
     <Compile Include="MyToolWindow.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="OutputWindows.cs" />

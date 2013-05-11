@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.Runtime.InteropServices;
 using System.ComponentModel.Design;
 using EventStore.VS.Tools.Commands;
-using Microsoft.VisualStudio.Shell.Interop;
+using EventStore.VS.Tools.Infrastructure;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Project;
 using EventStore.VS.Tools.PropertyPages;
-using System;
 
 namespace EventStore.VS.Tools
 {
@@ -45,17 +42,13 @@ namespace EventStore.VS.Tools
     [Guid(GuidList.guidEventStore_VS_ToolsPkgString)]
     public sealed class EventStorePackage : ProjectPackage
     {
-        private readonly IDictionary<uint, IVsCommand> _commands = new Dictionary<uint, IVsCommand>(); 
+        private readonly IDictionary<uint, IVsCommand> _commands = new Dictionary<uint, IVsCommand>();
+        private readonly TypeBaseDispatcher<IMessage> _dispatcher = new TypeBaseDispatcher<IMessage>();
 
         public IVsCommand FindCommand(uint commandId)
         {
             IVsCommand command;
             return !_commands.TryGetValue(commandId, out command) ? null : command;
-        }
-
-        public EventStorePackage()
-        {
-            Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
         }
 
 
@@ -68,7 +61,6 @@ namespace EventStore.VS.Tools
         /// </summary>
         protected override void Initialize()
         {
-            Debug.WriteLine (string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
             base.Initialize();
             RegisterProjectFactory(new ProjectionsProjectFactory(this));
             RegisterCommands();
@@ -77,8 +69,8 @@ namespace EventStore.VS.Tools
 
         private IEnumerable<IVsCommand> BuildCommands()
         {
-            yield return new DeployCommand(this);
-            yield return new ToolWindowCommand(this);
+            yield return new DeployCommand(_dispatcher);
+            yield return new ToolWindowCommand(this, _dispatcher);
         }
 
         private void RegisterCommands()

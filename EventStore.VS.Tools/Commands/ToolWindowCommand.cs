@@ -1,4 +1,5 @@
 ﻿using System;
+using EventStore.VS.Tools.Infrastructure;
 using Microsoft.VisualStudio.Project;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -7,11 +8,13 @@ namespace EventStore.VS.Tools.Commands
     public sealed class ToolWindowCommand : IVsCommand
     {
         private readonly EventStorePackage _package;
+        private readonly IPublish<IMessage> _publisher;
         public uint CmdId { get { return PkgCmdIDList.cmdidToolSettings; } }
 
-        public ToolWindowCommand(EventStorePackage package)
+        public ToolWindowCommand(EventStorePackage package, IPublish<IMessage> publisher)
         {
             _package = package;
+            _publisher = publisher;
         }
 
         public void Execute(HierarchyNode node)

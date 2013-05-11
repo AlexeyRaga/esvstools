@@ -1,4 +1,5 @@
 ﻿using System;
+using EventStore.VS.Tools.Infrastructure;
 using Microsoft.VisualStudio.Project;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell;
@@ -7,17 +8,15 @@ namespace EventStore.VS.Tools.Commands
 {
     public abstract class CommandBase : IVsCommand
     {
-        private readonly EventStorePackage _package;
+        public IPublish<IMessage> Publisher { get; private set; }
         protected IVsUIShell Shell { get; private set; }
 
         public abstract uint CmdId { get; }
         public abstract void Execute(HierarchyNode node);
 
-        protected CommandBase(EventStorePackage package)
+        protected CommandBase( IPublish<IMessage> publisher)
         {
-            if (package == null) throw new ArgumentNullException("package");
-            _package = package;
-
+            Publisher = publisher;
             Shell = (IVsUIShell)Package.GetGlobalService(typeof(SVsUIShell));
         }
 
