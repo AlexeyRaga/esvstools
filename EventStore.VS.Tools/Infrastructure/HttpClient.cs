@@ -4,27 +4,34 @@ using System.IO;
 using System.Net;
 using System.Text;
 
-namespace EventStore.VS.Tools.EventStoreServices
+namespace EventStore.VS.Tools.Infrastructure
 {
-    internal sealed class SimpleHttpClient
+    public interface IHttpClient
     {
-        public SimpleWebResponse Get(string url)
+        HttpResponse Get(string url);
+        HttpResponse Post(string url, string data);
+        HttpResponse Put(string url, string date);
+    }
+
+    internal sealed class HttpClient : IHttpClient
+    {
+        public HttpResponse Get(string url)
         {
             var request = CreateJsonRequest(url, "GET");
             return ExecuteRequestGetResponse(request);
         }
 
-        public SimpleWebResponse Post(string url, string data)
+        public HttpResponse Post(string url, string data)
         {
             return MakeRequest(url, "POST", data);
         }
 
-        public SimpleWebResponse Put(string url, string data)
+        public HttpResponse Put(string url, string data)
         {
             return MakeRequest(url, "PUT", data);
         }
 
-        private static SimpleWebResponse MakeRequest(string url, string method, string data)
+        private static HttpResponse MakeRequest(string url, string method, string data)
         {
             var request = CreateJsonRequest(url, method);
             if (!String.IsNullOrEmpty(data))
@@ -50,27 +57,30 @@ namespace EventStore.VS.Tools.EventStoreServices
             return request;
         }
 
-        private static SimpleWebResponse ExecuteRequestGetResponse(WebRequest request)
+        private static HttpResponse ExecuteRequestGetResponse(WebRequest request)
         {
-            using (var response = request.GetResponse())
+            using (var response = (HttpWebResponse)request.GetResponse())
             {
                 var headers = response.SupportsHeaders ? response.Headers : new NameValueCollection();
                 using (var responseStream = response.GetResponseStream())
                 using (var reader = new StreamReader(responseStream))
                 {
                     var content = reader.ReadToEnd();
-                    return new SimpleWebResponse(content, headers);
+                    return new HttpResponse(response.StatusCode, content, headers);
                 }
             }
         }
     }
 
-    internal sealed class SimpleWebResponse
+    public sealed class HttpResponse
     {
         public NameValueCollection Headers { get; private set; }
         public string Content { get; private set; }
-        public SimpleWebResponse(string content, NameValueCollection headers)
+        public HttpStatusCode StatusCode { get; private set; }
+
+        public HttpResponse(HttpStatusCode statusCode, string content, NameValueCollection headers)
         {
+            StatusCode = statusCode;
             Content = content;
             Headers = headers;
         }

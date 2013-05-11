@@ -2,18 +2,19 @@
 using System.Linq;
 using System.Net;
 using Newtonsoft.Json.Linq;
+using EventStore.VS.Tools.Infrastructure;
 
 namespace EventStore.VS.Tools.EventStoreServices
 {
     internal sealed class ProjectionsManagerLight
     {
         private readonly IPEndPoint _endPoint;
-        private readonly SimpleHttpClient _client;
+        private readonly HttpClient _client;
 
         public ProjectionsManagerLight(IPEndPoint endPoint)
         {
             _endPoint = endPoint;
-            _client = new SimpleHttpClient();
+            _client = new HttpClient();
         }
 
         public string[] GetAllNonSystem()

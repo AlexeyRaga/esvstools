@@ -79,7 +79,6 @@ namespace EventStore.VS.Tools
         {
             yield return new DeployCommand(this);
             yield return new ToolWindowCommand(this);
-            yield return new RunProjectionCommand(this);
         }
 
         private void RegisterCommands()

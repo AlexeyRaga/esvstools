@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace EventStore.VS.Tools.EventStoreServices
+namespace EventStore.VS.Tools.Infrastructure
 {
     internal static class HttpExtensions
     {
