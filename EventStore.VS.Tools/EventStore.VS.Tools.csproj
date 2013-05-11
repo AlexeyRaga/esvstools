@@ -136,6 +136,7 @@
     <Compile Include="Commands\IVsCommand.cs" />
     <Compile Include="Commands\ToolWindowCommand.cs" />
     <Compile Include="EventStoreServices\EventStoreConnectionFactory.cs" />
+    <Compile Include="EventStore\EventStoreConnectionException.cs" />
     <Compile Include="Infrastructure\HttpExtensions.cs" />
     <Compile Include="EventStoreServices\ProjectionsManagerLight.cs" />
     <Compile Include="Infrastructure\HttpClient.cs" />

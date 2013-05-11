@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventStore.VS.Tools", "Even
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{BA100FCE-F2FA-43B7-89FD-15C96DE567C9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventStore.Vs.Tools.Tests", "EventStore.Vs.Tools.Tests\EventStore.Vs.Tools.Tests.csproj", "{96F96EA7-08C6-49D5-982F-9A9E63384CD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{4C2C543F-E851-4F41-83D6-69B59205EEEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C2C543F-E851-4F41-83D6-69B59205EEEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C2C543F-E851-4F41-83D6-69B59205EEEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96F96EA7-08C6-49D5-982F-9A9E63384CD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96F96EA7-08C6-49D5-982F-9A9E63384CD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96F96EA7-08C6-49D5-982F-9A9E63384CD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96F96EA7-08C6-49D5-982F-9A9E63384CD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

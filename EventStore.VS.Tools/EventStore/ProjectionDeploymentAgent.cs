@@ -1,11 +1,6 @@
 ﻿using EventStore.VS.Tools.Infrastructure;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EventStore.VS.Tools.EventStore
 {
@@ -25,20 +20,17 @@ namespace EventStore.VS.Tools.EventStore
 
         public void Consume(DeployProjection message)
         {
-            var projectionName = GetProjectionName(message.FilePath);
-            var content = File.ReadAllText(message.FilePath);  
-
-            if (ProjectionExistsInEventStore(projectionName))
-                UpdateProjection(projectionName, content);
+            if (ProjectionExistsInEventStore(message.Name))
+                UpdateProjection(message.Name, message.Content);
             else
-                CreateProjection(projectionName, content);
+                CreateProjection(message.Name, message.Content);
         }
 
         private void CreateProjection(string projectionName, string content)
         {
-            var isEmitEnabled = "no";
-            var isCheckpointEnabled = "yes";
-            var isEnabled = "yes";
+            const string isEmitEnabled = "no";
+            const string isCheckpointEnabled = "yes";
+            const string isEnabled = "yes";
             var projectionLocation = String.Format("/projections/continuous?name={0}&type=JS&emit={1}&checkpoints={2}&enabled={3}",
                 projectionName, isEmitEnabled, isCheckpointEnabled, isEnabled);
 
@@ -47,7 +39,9 @@ namespace EventStore.VS.Tools.EventStore
             var result = _httpClient.Post(projectionUri, content);
 
             if (result.StatusCode != HttpStatusCode.Accepted && result.StatusCode != HttpStatusCode.Created && result.StatusCode != HttpStatusCode.OK)
-                throw new InvalidOperationException(String.Format("Unable to create projection {0}, the response was: {1}", projectionName, result.StatusCode));
+                throw new EventStoreConnectionException(
+                    String.Format("Unable to create projection {0}, the response was: {1}", projectionName, result.StatusCode), 
+                    result.StatusCode);
         }
 
         private void UpdateProjection(string projectionName, string content)
@@ -57,7 +51,9 @@ namespace EventStore.VS.Tools.EventStore
 
             var result = _httpClient.Put(locationUri, content);
             if (result.StatusCode != HttpStatusCode.OK && result.StatusCode != HttpStatusCode.Accepted)
-                throw new InvalidOperationException(String.Format("Unable to update projection '{0}', the response was: {1}", projectionName, result.StatusCode));
+                throw new EventStoreConnectionException(
+                    String.Format("Unable to create projection {0}, the response was: {1}", projectionName, result.StatusCode),
+                    result.StatusCode);
         }
 
         private bool ProjectionExistsInEventStore(string projectionName)
@@ -65,14 +61,9 @@ namespace EventStore.VS.Tools.EventStore
             var projectionLocation = "/projection/" + projectionName + "/query";
 
             var locaionUri = _eventStoreEndpoint.ToHttpUrl(projectionLocation);
-            var response = _httpClient.Get(projectionLocation);
+            var response = _httpClient.Get(locaionUri);
 
             return response.StatusCode == HttpStatusCode.OK;
-        }
-
-        private static string GetProjectionName(string filePath)
-        {
-            return Path.GetFileNameWithoutExtension(filePath);
         }
     }
 }
