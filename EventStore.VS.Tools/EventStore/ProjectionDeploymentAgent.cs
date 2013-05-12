@@ -14,7 +14,7 @@ namespace EventStore.VS.Tools.EventStore
             _httpClient = httpClient;
         }
 
-        public ProjectionDeploymentAgent() : this(new HttpClient()) { }
+        public ProjectionDeploymentAgent() : this(new SimpleHttpClient()) { }
 
         public void Consume(DeployProjection message)
         {
@@ -57,8 +57,13 @@ namespace EventStore.VS.Tools.EventStore
         private bool ProjectionExistsInEventStore(string eventStoreAddress, string projectionName)
         {
             var projectionLocation = "/projection/" + projectionName + "/query";
-
             var locaionUri = eventStoreAddress + projectionLocation;
+
+            var httpClient = new System.Net.Http.HttpClient();
+            httpClient.BaseAddress = new Uri(eventStoreAddress);
+
+            var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, locaionUri);
+
             var response = _httpClient.Get(locaionUri);
 
             return response.StatusCode == HttpStatusCode.OK;

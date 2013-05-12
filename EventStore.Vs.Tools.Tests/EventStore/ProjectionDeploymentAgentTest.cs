@@ -19,7 +19,7 @@ namespace EventStore.Vs.Tools.Tests.EventStore
             var projectionName = Guid.NewGuid().ToString();
             var projectionContent = Guid.NewGuid().ToString();
 
-            var httpClient = new FakeHttpClient(u => new HttpResponse(HttpStatusCode.OK, String.Empty, new NameValueCollection()), null, null);
+            var httpClient = new FakeHttpClient(u => new HttpResponse(HttpStatusCode.OK, String.Empty), null, null);
 
             var agent = new ProjectionDeploymentAgent(httpClient);
             agent.Consume(new DeployProjection(EventStoreAddress, projectionName, projectionContent));
@@ -38,7 +38,7 @@ namespace EventStore.Vs.Tools.Tests.EventStore
             var projectionName = Guid.NewGuid().ToString();
             var projectionContent = Guid.NewGuid().ToString();
 
-            var httpClient = new FakeHttpClient(u => new HttpResponse(HttpStatusCode.NotFound, String.Empty, new NameValueCollection()), null, null);
+            var httpClient = new FakeHttpClient(u => new HttpResponse(HttpStatusCode.NotFound, String.Empty), null, null);
 
             var agent = new ProjectionDeploymentAgent(httpClient);
             agent.Consume(new DeployProjection(EventStoreAddress, projectionName, projectionContent));
@@ -57,7 +57,7 @@ namespace EventStore.Vs.Tools.Tests.EventStore
             var projectionName = Guid.NewGuid().ToString();
             var projectionContent = Guid.NewGuid().ToString();
 
-            var response = new HttpResponse(HttpStatusCode.InternalServerError, String.Empty, new NameValueCollection());
+            var response = new HttpResponse(HttpStatusCode.InternalServerError, String.Empty);
 
             var httpClient = new FakeHttpClient(u => response, (u, d) => response, (u, d) => response);
 

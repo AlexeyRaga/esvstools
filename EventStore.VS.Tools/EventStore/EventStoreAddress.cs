@@ -44,7 +44,7 @@ namespace EventStore.VS.Tools.EventStore
         private static Tuple<string, int> ParseHostAndPort(string connectionString)
         {
             var hostAndPort = connectionString.Split(new[] { ':' }, 2);
-            var rawPort = hostAndPort.Length == 2 ? hostAndPort[1] : "1113";
+            var rawPort = hostAndPort.Length == 2 ? hostAndPort[1] : "2113";
 
             int port;
             if (!Int32.TryParse(rawPort, out port))

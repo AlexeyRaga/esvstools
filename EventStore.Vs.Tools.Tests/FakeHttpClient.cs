@@ -1,11 +1,7 @@
 ﻿using EventStore.VS.Tools.Infrastructure;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EventStore.Vs.Tools.Tests
 {
@@ -15,18 +11,18 @@ namespace EventStore.Vs.Tools.Tests
         public readonly List<RequestData> PutRequests = new List<RequestData>();
         public readonly List<RequestData> PostRequests = new List<RequestData>();
 
-        private Func<string, HttpResponse> _getRequest;
-        private Func<string, string, HttpResponse> _putRequest;
-        private Func<string, string, HttpResponse> _postRequest;
+        private readonly Func<string, HttpResponse> _getRequest;
+        private readonly Func<string, string, HttpResponse> _putRequest;
+        private readonly Func<string, string, HttpResponse> _postRequest;
 
         public FakeHttpClient(
             Func<string, HttpResponse> getRequest,
             Func<string, string, HttpResponse> putRequest,
             Func<string, string, HttpResponse> postRequest)
         {
-            _getRequest = getRequest ?? new Func<string, HttpResponse>(u => new HttpResponse(HttpStatusCode.OK, String.Empty, new NameValueCollection()));
-            _putRequest = putRequest ?? new Func<string, string, HttpResponse>((u, d) => new HttpResponse(HttpStatusCode.OK, String.Empty, new NameValueCollection()));
-            _postRequest = postRequest ?? new Func<string, string, HttpResponse>((u, d) => new HttpResponse(HttpStatusCode.OK, String.Empty, new NameValueCollection()));
+            _getRequest = getRequest ?? (u => new HttpResponse(HttpStatusCode.OK, String.Empty));
+            _putRequest = putRequest ?? ((u, d) => new HttpResponse(HttpStatusCode.OK, String.Empty));
+            _postRequest = postRequest ?? ((u, d) => new HttpResponse(HttpStatusCode.OK, String.Empty));
         }
 
         public FakeHttpClient() : this (null, null, null) { }
