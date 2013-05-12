@@ -11,7 +11,7 @@ namespace EventStore.Vs.Tools.Tests.EventStore
     [TestFixture]
     public sealed class ProjectionDeploymentAgentTest
     {
-        private readonly string _eventStoreAddress = "http://localhost:1113";
+        private const string EventStoreAddress = "http://localhost:1113";
 
         [Test]
         public void Should_update_existing_projection()
@@ -22,7 +22,7 @@ namespace EventStore.Vs.Tools.Tests.EventStore
             var httpClient = new FakeHttpClient(u => new HttpResponse(HttpStatusCode.OK, String.Empty, new NameValueCollection()), null, null);
 
             var agent = new ProjectionDeploymentAgent(httpClient);
-            agent.Consume(new DeployProjection(_eventStoreAddress, projectionName, projectionContent));
+            agent.Consume(new DeployProjection(EventStoreAddress, projectionName, projectionContent));
 
             CollectionAssert.IsEmpty(httpClient.PostRequests);
             CollectionAssert.IsNotEmpty(httpClient.GetRequests);
@@ -41,7 +41,7 @@ namespace EventStore.Vs.Tools.Tests.EventStore
             var httpClient = new FakeHttpClient(u => new HttpResponse(HttpStatusCode.NotFound, String.Empty, new NameValueCollection()), null, null);
 
             var agent = new ProjectionDeploymentAgent(httpClient);
-            agent.Consume(new DeployProjection(_eventStoreAddress, projectionName, projectionContent));
+            agent.Consume(new DeployProjection(EventStoreAddress, projectionName, projectionContent));
 
             CollectionAssert.IsEmpty(httpClient.PutRequests);
             CollectionAssert.IsNotEmpty(httpClient.GetRequests);
@@ -62,7 +62,7 @@ namespace EventStore.Vs.Tools.Tests.EventStore
             var httpClient = new FakeHttpClient(u => response, (u, d) => response, (u, d) => response);
 
             var agent = new ProjectionDeploymentAgent(httpClient);
-            agent.Consume(new DeployProjection(_eventStoreAddress, projectionName, projectionContent));
+            agent.Consume(new DeployProjection(EventStoreAddress, projectionName, projectionContent));
         }
     }
 }
