@@ -1,4 +1,6 @@
-﻿using EventStore.VS.Tools.Infrastructure;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using EventStore.VS.Tools.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -15,6 +17,8 @@ namespace EventStore.Vs.Tools.Tests
         private readonly Func<string, string, HttpResponse> _putRequest;
         private readonly Func<string, string, HttpResponse> _postRequest;
 
+        private CountdownEvent _optionalCounter;
+        
         public FakeHttpClient(
             Func<string, HttpResponse> getRequest,
             Func<string, string, HttpResponse> putRequest,
@@ -27,21 +31,38 @@ namespace EventStore.Vs.Tools.Tests
 
         public FakeHttpClient() : this (null, null, null) { }
 
+
+        public void SetCounter(CountdownEvent counter)
+        {
+            _optionalCounter = counter;
+        }
+
+        private void Count()
+        {
+            if (_optionalCounter != null) _optionalCounter.Signal();
+        }
+
+        public Task<HttpResponse> GetAsync(string url) { return Task.Factory.StartNew(() => Get(url)); }
         public HttpResponse Get(string url)
         {
             GetRequests.Add(new RequestData(url, String.Empty));
+            Count();
             return _getRequest(url);
         }
 
+        public Task<HttpResponse> PostAsync(string url, string data) { return Task.Factory.StartNew(() => Post(url, data)); }
         public HttpResponse Post(string url, string data)
         {
             PostRequests.Add(new RequestData(url, data));
+            Count();
             return _postRequest(url, data);
         }
 
+        public Task<HttpResponse> PutAsync(string url, string data) { return Task.Factory.StartNew(() => Put(url, data)); }
         public HttpResponse Put(string url, string data)
         {
             PutRequests.Add(new RequestData(url, data));
+            Count();
             return _putRequest(url, data);
         }
 

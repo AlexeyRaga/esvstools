@@ -24,4 +24,29 @@ namespace EventStore.VS.Tools
     {
         public DeployProjection(string eventStoreEndPoint, string name, string content) : base(eventStoreEndPoint, name, content) { }
     }
+
+    public abstract class ProjectionDeploymentEvent : IEvent
+    {
+        public string Name { get; private set; }
+
+        protected ProjectionDeploymentEvent(string name)
+        {
+            Name = name;
+        }
+    }
+
+    public sealed class ProjectionCreated : ProjectionDeploymentEvent
+    {
+        public ProjectionCreated(string name) : base(name) { }
+    }
+
+    public sealed class ProjectionUpdated : ProjectionDeploymentEvent
+    {
+        public ProjectionUpdated(string name) : base(name) { }
+    }
+
+    public sealed class ProjectionNotUpdatedBecauseNotChanged : ProjectionDeploymentEvent
+    {
+        public ProjectionNotUpdatedBecauseNotChanged(string name) : base(name) { }
+    }
 }

@@ -1,4 +1,5 @@
-﻿using EventStore.VS.Tools.Infrastructure;
+﻿using System.Threading.Tasks;
+using EventStore.VS.Tools.Infrastructure;
 using System;
 using System.Net;
 
@@ -7,24 +8,44 @@ namespace EventStore.VS.Tools.EventStore
     public sealed class ProjectionDeploymentAgent : IConsume<DeployProjection>
     {
         private readonly IHttpClient _httpClient;
+        private readonly IPublish<IMessage> _publisher;
 
-        public ProjectionDeploymentAgent(IHttpClient httpClient)
+        public ProjectionDeploymentAgent(IHttpClient httpClient, IPublish<IMessage> publisher)
         {
             if (httpClient == null) throw new ArgumentNullException("httpClient");
             _httpClient = httpClient;
+            _publisher = publisher;
         }
 
-        public ProjectionDeploymentAgent() : this(new SimpleHttpClient()) { }
+        public ProjectionDeploymentAgent(IPublish<IMessage> publisher) : this(new SimpleHttpClient(), publisher) { }
 
-        public void Consume(DeployProjection message)
+        public async void Consume(DeployProjection message)
         {
-            if (ProjectionExistsInEventStore(message.EventStoreAddress, message.Name))
-                UpdateProjection(message.EventStoreAddress, message.Name, message.Content);
-            else
+            var projectionResponse = await GetExistingProjection(message.EventStoreAddress, message.Name);
+
+            if (projectionResponse.StatusCode == HttpStatusCode.NotFound)
+            {
                 CreateProjection(message.EventStoreAddress, message.Name, message.Content);
+                _publisher.Publish(new ProjectionCreated(message.Name));
+            }
+            else
+            {
+                var deployCodeHash = Hash.Compute(message.Content);
+                var existingCodeHash = Hash.Compute(projectionResponse.Content);
+
+                if (deployCodeHash != existingCodeHash)
+                {
+                    UpdateProjection(message.EventStoreAddress, message.Name, message.Content);
+                    _publisher.Publish(new ProjectionUpdated(message.Name));
+                }
+                else
+                {
+                    _publisher.Publish(new ProjectionNotUpdatedBecauseNotChanged(message.Name));
+                }
+            }                
         }
 
-        private void CreateProjection(string eventStoreAddress, string projectionName, string content)
+        private async void CreateProjection(string eventStoreAddress, string projectionName, string content)
         {
             const string isEmitEnabled = "no";
             const string isCheckpointEnabled = "yes";
@@ -34,7 +55,7 @@ namespace EventStore.VS.Tools.EventStore
 
             var projectionUri = eventStoreAddress + projectionLocation;
 
-            var result = _httpClient.Post(projectionUri, content);
+            var result = await _httpClient.PostAsync(projectionUri, content);
 
             if (result.StatusCode != HttpStatusCode.Accepted && result.StatusCode != HttpStatusCode.Created && result.StatusCode != HttpStatusCode.OK)
                 throw new EventStoreConnectionException(
@@ -42,31 +63,26 @@ namespace EventStore.VS.Tools.EventStore
                     result.StatusCode);
         }
 
-        private void UpdateProjection(string eventStoreAddress, string projectionName, string content)
+        private async void UpdateProjection(string eventStoreAddress, string projectionName, string content)
         {
             var projectionLocation = "/projection/" + projectionName + "/query?type=JS";
             var locationUri = eventStoreAddress + projectionLocation;
 
-            var result = _httpClient.Put(locationUri, content);
+            var result = await _httpClient.PutAsync(locationUri, content);
             if (result.StatusCode != HttpStatusCode.OK && result.StatusCode != HttpStatusCode.Accepted)
                 throw new EventStoreConnectionException(
                     String.Format("Unable to create projection {0}, the response was: {1}", projectionName, result.StatusCode),
                     result.StatusCode);
         }
 
-        private bool ProjectionExistsInEventStore(string eventStoreAddress, string projectionName)
+        private async Task<HttpResponse> GetExistingProjection(string eventStoreAddress, string projectionName)
         {
             var projectionLocation = "/projection/" + projectionName + "/query";
             var locaionUri = eventStoreAddress + projectionLocation;
 
-            var httpClient = new System.Net.Http.HttpClient();
-            httpClient.BaseAddress = new Uri(eventStoreAddress);
+            var response = await _httpClient.GetAsync(locaionUri);
 
-            var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, locaionUri);
-
-            var response = _httpClient.Get(locaionUri);
-
-            return response.StatusCode == HttpStatusCode.OK;
+            return response;
         }
     }
 }

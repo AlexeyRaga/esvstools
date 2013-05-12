@@ -44,7 +44,7 @@ namespace EventStore.VS.Tools
     public sealed class EventStorePackage : ProjectPackage
     {
         private readonly IDictionary<uint, IVsCommand> _commands = new Dictionary<uint, IVsCommand>();
-        private readonly TypeBaseDispatcher<IMessage> _dispatcher = new TypeBaseDispatcher<IMessage>();
+        private readonly TopicBaseDispatcher<IMessage> _dispatcher = new TopicBaseDispatcher<IMessage>();
 
         public IVsCommand FindCommand(uint commandId)
         {
@@ -71,7 +71,8 @@ namespace EventStore.VS.Tools
 
         private void SubscribeConsumers()
         {
-            _dispatcher.Subscribe(new ProjectionDeploymentAgent());
+            _dispatcher.Subscribe(new ProjectionDeploymentAgent(_dispatcher));
+            _dispatcher.Subscribe(new DeploymentProcessOutputConsumer(new OutputMessageWriter()));
         }
 
         private IEnumerable<IVsCommand> BuildCommands()

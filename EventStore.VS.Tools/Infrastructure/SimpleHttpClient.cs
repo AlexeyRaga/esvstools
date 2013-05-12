@@ -12,6 +12,10 @@ namespace EventStore.VS.Tools.Infrastructure
         HttpResponse Get(string url);
         HttpResponse Post(string url, string data);
         HttpResponse Put(string url, string date);
+
+        Task<HttpResponse> GetAsync(string url);
+        Task<HttpResponse> PostAsync(string url, string data);
+        Task<HttpResponse> PutAsync(string url, string date);
     }
 
     internal sealed class SimpleHttpClient : IHttpClient
