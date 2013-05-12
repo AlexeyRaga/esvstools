@@ -132,7 +132,7 @@
     <Compile Include="Commands\IVsCommand.cs" />
     <Compile Include="Commands\ToolWindowCommand.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="EventStore\EventStoreEndPoint.cs" />
+    <Compile Include="EventStore\EventStoreAddress.cs" />
     <Compile Include="EventStore\EventStoreConnectionException.cs" />
     <Compile Include="Infrastructure\DowncastingConsumer.cs" />
     <Compile Include="Infrastructure\HttpExtensions.cs" />

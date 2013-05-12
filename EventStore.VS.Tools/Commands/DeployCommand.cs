@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using EventStore.VS.Tools.EventStore;
-using EventStore.VS.Tools.EventStoreServices;
 using EventStore.VS.Tools.Infrastructure;
 using Microsoft.VisualStudio.Project;
 
@@ -21,11 +19,11 @@ namespace EventStore.VS.Tools.Commands
             var projectNode = (ProjectionsProjectNode) node;
             var projectionNodes = new List<ProjectionFileNode>();
 
-            var endpoint = EventStoreEndPoint.Get(node.ProjectMgr);
+            var eventStoreAddress = EventStoreAddress.Get(node.ProjectMgr);
 
             projectNode.FindNodesOfType(projectionNodes);
 
-            var commands = BuildDeployCommands(endpoint, projectionNodes);
+            var commands = BuildDeployCommands(eventStoreAddress, projectionNodes);
 
             foreach (var command in commands)
             {
@@ -33,9 +31,9 @@ namespace EventStore.VS.Tools.Commands
             }
         }
 
-        private IEnumerable<DeployProjection> BuildDeployCommands(IPEndPoint endpoint, IEnumerable<ProjectionFileNode> fileNodes)
+        private IEnumerable<DeployProjection> BuildDeployCommands(string eventStoreAddress, IEnumerable<ProjectionFileNode> fileNodes)
         {
-            return fileNodes.Select(x => new DeployProjection(endpoint, GetProjectionName(x), GetProjectionContent(x)));
+            return fileNodes.Select(x => new DeployProjection(eventStoreAddress, GetProjectionName(x), GetProjectionContent(x)));
         } 
 
         private static string GetProjectionName(FileNode node)

@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
 using Microsoft.VisualStudio.Project;
 
 namespace EventStore.VS.Tools.EventStore
 {
-    public sealed class EventStoreEndPoint
+    public sealed class EventStoreAddress
     {
-        public static IPEndPoint Get(ProjectNode projectNode)
+        public static string Get(ProjectNode projectNode)
         {
             var connectionString = projectNode.CurrentConfig.GetPropertyValue(Constants.EventStore.ConnectionString);
             if (String.IsNullOrWhiteSpace(connectionString))
@@ -17,16 +16,29 @@ namespace EventStore.VS.Tools.EventStore
 
             return Get(connectionString);
         }
-        public static IPEndPoint Get(string connectionString)
-        {
 
+        public static string Get(string connectionString)
+        {
             if (String.IsNullOrWhiteSpace(connectionString))
                 throw new ArgumentNullException("connectionString");
 
             var hostAndPort = ParseHostAndPort(connectionString);
-            var endpoint = GetIPEndPointFromHostName(hostAndPort.Item1, hostAndPort.Item2);
 
-            return endpoint;
+            EnsureHostNameExists(hostAndPort.Item1);
+
+            return String.Format("http://{0}:{1}", hostAndPort.Item1, hostAndPort.Item2);
+        }
+
+        private static void EnsureHostNameExists(string hostName)
+        {
+            var addresses = Dns.GetHostAddresses(hostName);
+            if (addresses.Length == 0)
+            {
+                throw new EventStoreConnectionException(
+                    "Unable to retrieve address from specified host name: " + hostName,
+                    HttpStatusCode.ServiceUnavailable
+                    );
+            }
         }
 
         private static Tuple<string, int> ParseHostAndPort(string connectionString)
@@ -38,21 +50,7 @@ namespace EventStore.VS.Tools.EventStore
             if (!Int32.TryParse(rawPort, out port))
                 throw new InvalidOperationException("EventStore Connection String: port is incorrect: " + rawPort);
 
-            return Tuple.Create(hostAndPort[0], port);
+            return Tuple.Create(hostAndPort[0].Trim(' ', '/', '\\'), port);
         }
-
-        private static IPEndPoint GetIPEndPointFromHostName(string hostName, int port)
-        {
-            var addresses = Dns.GetHostAddresses(hostName);
-            if (addresses.Length == 0)
-            {
-                throw new ArgumentException(
-                    "Unable to retrieve address from specified host name.",
-                    "hostName"
-                );
-            }
-            return new IPEndPoint(addresses.Last(), port); // Port gets validated here.
-        }
-
     }
 }

@@ -9,12 +9,12 @@ namespace EventStore.VS.Tools
         public string Name { get; private set; }
         public string Content { get; private set; }
 
-        public IPEndPoint EventStoreEndPoint { get; private set; }
+        public string EventStoreAddress { get; private set; }
 
-        protected CommandToEventStore(IPEndPoint eventStoreEndPoint, string name, string content)
+        protected CommandToEventStore(string eventStoreEndPoint, string name, string content)
         {
             if (String.IsNullOrWhiteSpace(name)) throw new ArgumentNullException("name");
-            EventStoreEndPoint = eventStoreEndPoint;
+            EventStoreAddress = eventStoreEndPoint;
             Name = name;
             Content = content;
         }
@@ -22,6 +22,6 @@ namespace EventStore.VS.Tools
 
     public sealed class DeployProjection : CommandToEventStore
     {
-        public DeployProjection(IPEndPoint eventStoreEndPoint, string name, string content) : base(eventStoreEndPoint, name, content) { }
+        public DeployProjection(string eventStoreEndPoint, string name, string content) : base(eventStoreEndPoint, name, content) { }
     }
 }

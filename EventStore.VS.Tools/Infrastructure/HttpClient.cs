@@ -53,6 +53,7 @@ namespace EventStore.VS.Tools.Infrastructure
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.ContentType = "application/json";
             request.Method = method;
+            //request.Proxy = new WebProxy("localhost", );
 
             return request;
         }
