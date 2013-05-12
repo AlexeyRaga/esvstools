@@ -24,9 +24,9 @@ namespace EventStore.Vs.Tools.Tests
             Func<string, string, HttpResponse> putRequest,
             Func<string, string, HttpResponse> postRequest)
         {
-            _getRequest = getRequest ?? (u => new HttpResponse(HttpStatusCode.OK, String.Empty));
-            _putRequest = putRequest ?? ((u, d) => new HttpResponse(HttpStatusCode.OK, String.Empty));
-            _postRequest = postRequest ?? ((u, d) => new HttpResponse(HttpStatusCode.OK, String.Empty));
+            _getRequest = getRequest ?? (u => new HttpResponse(HttpStatusCode.OK, String.Empty, String.Empty));
+            _putRequest = putRequest ?? ((u, d) => new HttpResponse(HttpStatusCode.OK, String.Empty, String.Empty));
+            _postRequest = postRequest ?? ((u, d) => new HttpResponse(HttpStatusCode.OK, String.Empty, String.Empty));
         }
 
         public FakeHttpClient() : this (null, null, null) { }

@@ -19,7 +19,7 @@ namespace EventStore.Vs.Tools.Tests.EventStore
             var projectionName = Guid.NewGuid().ToString();
             var projectionContent = Guid.NewGuid().ToString();
 
-            var httpClient = new FakeHttpClient(u => new HttpResponse(HttpStatusCode.OK, String.Empty), null, null);
+            var httpClient = new FakeHttpClient(u => new HttpResponse(HttpStatusCode.OK, String.Empty, String.Empty), null, null);
             var counter = new CountdownEvent(2);
             httpClient.SetCounter(counter);
 
@@ -44,7 +44,7 @@ namespace EventStore.Vs.Tools.Tests.EventStore
             var projectionName = Guid.NewGuid().ToString();
             var projectionContent = Guid.NewGuid().ToString();
 
-            var httpClient = new FakeHttpClient(u => new HttpResponse(HttpStatusCode.NotFound, String.Empty), null, null);
+            var httpClient = new FakeHttpClient(u => new HttpResponse(HttpStatusCode.NotFound, String.Empty, String.Empty), null, null);
             var counter = new CountdownEvent(2);
             httpClient.SetCounter(counter);
 
@@ -69,7 +69,7 @@ namespace EventStore.Vs.Tools.Tests.EventStore
             var projectionName = Guid.NewGuid().ToString();
             var projectionContent = Guid.NewGuid().ToString();
 
-            var response = new HttpResponse(HttpStatusCode.InternalServerError, String.Empty);
+            var response = new HttpResponse(HttpStatusCode.InternalServerError, String.Empty, String.Empty);
 
             var httpClient = new FakeHttpClient(u => response, (u, d) => response, (u, d) => response);
             var counter = new CountdownEvent(2);

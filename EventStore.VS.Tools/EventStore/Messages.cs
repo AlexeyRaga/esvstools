@@ -11,10 +11,10 @@ namespace EventStore.VS.Tools
 
         public string EventStoreAddress { get; private set; }
 
-        protected CommandToEventStore(string eventStoreEndPoint, string name, string content)
+        protected CommandToEventStore(string eventStoreAddress, string name, string content)
         {
             if (String.IsNullOrWhiteSpace(name)) throw new ArgumentNullException("name");
-            EventStoreAddress = eventStoreEndPoint;
+            EventStoreAddress = eventStoreAddress;
             Name = name;
             Content = content;
         }
@@ -22,17 +22,32 @@ namespace EventStore.VS.Tools
 
     public sealed class DeployProjection : CommandToEventStore
     {
-        public DeployProjection(string eventStoreEndPoint, string name, string content) : base(eventStoreEndPoint, name, content) { }
+        public DeployProjection(string eventStoreAddress, string name, string content) : base(eventStoreAddress, name, content) { }
+    }
+
+    public sealed class RunProjection : CommandToEventStore
+    {
+        public RunProjection(string eventStoreAddress, string name, string content)
+            : base(eventStoreAddress, name, content) { }
+    }
+
+    public sealed class ProjectionExecuted : IEvent
+    {
+        public string Name { get; private set; }
+        public string Result { get; private set; }
+
+        public ProjectionExecuted(string name, string result)
+        {
+            Name = name;
+            Result = result;
+        }
     }
 
     public abstract class ProjectionDeploymentEvent : IEvent
     {
         public string Name { get; private set; }
 
-        protected ProjectionDeploymentEvent(string name)
-        {
-            Name = name;
-        }
+        protected ProjectionDeploymentEvent(string name) { Name = name; }
     }
 
     public sealed class ProjectionCreated : ProjectionDeploymentEvent

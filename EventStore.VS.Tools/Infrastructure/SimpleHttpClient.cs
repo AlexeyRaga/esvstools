@@ -70,8 +70,9 @@ namespace EventStore.VS.Tools.Infrastructure
             using (var client = new HttpClient())
             {
                 var result = await client.SendAsync(request);
+                var location = result.Headers.Location == null ? String.Empty : result.Headers.Location.ToString();
                 var response = await result.Content.ReadAsStringAsync();
-                return new HttpResponse(result.StatusCode, response);
+                return new HttpResponse(result.StatusCode, response, location);
             }
         }
 
@@ -87,12 +88,14 @@ namespace EventStore.VS.Tools.Infrastructure
     public sealed class HttpResponse
     {
         public string Content { get; private set; }
+        public string Location { get; private set; }
         public HttpStatusCode StatusCode { get; private set; }
 
-        public HttpResponse(HttpStatusCode statusCode, string content)
+        public HttpResponse(HttpStatusCode statusCode, string content, string location)
         {
             StatusCode = statusCode;
             Content = content;
+            Location = location;
         }
     }
 }

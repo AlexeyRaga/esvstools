@@ -73,12 +73,15 @@ namespace EventStore.VS.Tools
         {
             _dispatcher.Subscribe(new ProjectionDeploymentAgent(_dispatcher));
             _dispatcher.Subscribe(new DeploymentProcessOutputConsumer(new OutputMessageWriter()));
+            _dispatcher.Subscribe(new ProjectionRunner(_dispatcher));
+            _dispatcher.Subscribe(new PrintToOutputConsumer<ProjectionExecuted>(x => x.Result));
         }
 
         private IEnumerable<IVsCommand> BuildCommands()
         {
             yield return new DeployCommand(_dispatcher);
             yield return new ToolWindowCommand(this, _dispatcher);
+            yield return new RunCommand(_dispatcher);
         }
 
         private void RegisterCommands()
