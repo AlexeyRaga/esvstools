@@ -18,9 +18,9 @@ namespace EventStore.VSTools.Views
     /// <summary>
     /// Interaction logic for QueryView.xaml
     /// </summary>
-    public partial class QueryView : UserControl
+    public partial class QueryViewToolWindow : UserControl
     {
-        public QueryView()
+        public QueryViewToolWindow()
         {
             InitializeComponent();
         }
