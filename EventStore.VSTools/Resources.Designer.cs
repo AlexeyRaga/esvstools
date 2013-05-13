@@ -70,7 +70,7 @@ namespace EventStore.VSTools {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Settings.
+        ///   Looks up a localized string similar to Query View.
         /// </summary>
         internal static string ToolWindowTitle {
             get {

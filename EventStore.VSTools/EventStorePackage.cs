@@ -29,7 +29,7 @@ namespace EventStore.VSTools
     // This attribute is needed to let the shell know that this package exposes some menus.
     [ProvideMenuResource("Menus.ctmenu", 1)]
     // This attribute registers a tool window exposed by this package.
-    [ProvideToolWindow(typeof(MyToolWindow))]
+    [ProvideToolWindow(typeof(QueryViewWindow))]
     [ProvideProjectFactory(
         typeof(ProjectionsProjectFactory),
         null,

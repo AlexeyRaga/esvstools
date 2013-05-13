@@ -22,7 +22,7 @@ namespace EventStore.VSTools.Commands
             // Get the instance number 0 of this tool window. This window is single instance so this instance
             // is actually the only one.
             // The last flag is set to true so that if the tool window does not exists it will be created.
-            var window = _package.FindToolWindow(typeof(MyToolWindow), 0, true);
+            var window = _package.FindToolWindow(typeof(QueryViewWindow), 0, true);
             if ((null == window) || (null == window.Frame))
             {
                 throw new NotSupportedException(Resources.CanNotCreateWindow);

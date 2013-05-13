@@ -1,5 +1,5 @@
 ﻿using System.Runtime.InteropServices;
-using EventStore.VSTools.Forms;
+using EventStore.VSTools.Views;
 using Microsoft.VisualStudio.Shell;
 
 namespace EventStore.VSTools
@@ -14,12 +14,12 @@ namespace EventStore.VSTools
     /// implementation of the IVsUIElementPane interface.
     /// </summary>
     [Guid("f0a336be-32fe-4e02-bb4d-bb455632d8b0")]
-    public class MyToolWindow : ToolWindowPane
+    public class QueryViewWindow : ToolWindowPane
     {
         /// <summary>
         /// Standard constructor for the tool window.
         /// </summary>
-        public MyToolWindow() :
+        public QueryViewWindow() :
             base(null)
         {
             // Set the window title reading it from the resources.

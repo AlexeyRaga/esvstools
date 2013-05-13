@@ -139,12 +139,6 @@
     <Compile Include="EventStore\EventStoreAddress.cs" />
     <Compile Include="EventStore\EventStoreConnectionException.cs" />
     <Compile Include="EventStore\ProjectionRunner.cs" />
-    <Compile Include="Forms\QueryView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\QueryView.Designer.cs">
-      <DependentUpon>QueryView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Infrastructure\DowncastingConsumer.cs" />
     <Compile Include="Infrastructure\Hash.cs" />
     <Compile Include="Infrastructure\HttpExtensions.cs" />
@@ -159,7 +153,7 @@
     <Compile Include="EventStore\Messages.cs" />
     <Compile Include="Infrastructure\Multiplexer.cs" />
     <Compile Include="Infrastructure\TopicBaseDispatcher.cs" />
-    <Compile Include="MyToolWindow.cs" />
+    <Compile Include="QueryViewWindow.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="OutputWindows.cs" />
     <Compile Include="ProjectFactory.cs" />
@@ -182,6 +176,9 @@
     <Compile Include="EventStorePackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PkgCmdID.cs" />
+    <Compile Include="Views\QueryView.xaml.cs">
+      <DependentUpon>QueryView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
@@ -222,6 +219,20 @@
     <VSTemplate Include="Templates\Projects\Projections\Projections.vstemplate" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Page Include="Views\GenericResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\QueryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ToolWindowResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
     <ProjectBasePath>..\MPFProj\</ProjectBasePath>
