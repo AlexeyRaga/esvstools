@@ -16,6 +16,8 @@ namespace EventStore.VSTools
     [Guid("f0a336be-32fe-4e02-bb4d-bb455632d8b0")]
     public class QueryViewWindow : ToolWindowPane
     {
+        private readonly QueryToolWindowViewModel _queryTool = new QueryToolWindowViewModel();
+
         /// <summary>
         /// Standard constructor for the tool window.
         /// </summary>
@@ -35,7 +37,15 @@ namespace EventStore.VSTools
             // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on 
             // the object returned by the Content property.
-            base.Content = new QueryViewToolWindow();
+
+            var toolWindowViewModel = new QueryToolWindowViewModel();
+            base.Content = new QueryViewToolWindow(toolWindowViewModel);
+            _queryTool = toolWindowViewModel;
+        }
+
+        public void ShowQueryResult(string name, string queryUri, string queryResult)
+        {
+            _queryTool.ShowQueryResult(name, queryUri, queryResult);
         }
     }
 }

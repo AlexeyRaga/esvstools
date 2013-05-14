@@ -34,11 +34,13 @@ namespace EventStore.VSTools
     public sealed class ProjectionExecuted : IEvent
     {
         public string Name { get; private set; }
+        public string Uri { get; private set; }
         public string Result { get; private set; }
 
-        public ProjectionExecuted(string name, string result)
+        public ProjectionExecuted(string name, string uri, string result)
         {
             Name = name;
+            Uri = uri;
             Result = result;
         }
     }

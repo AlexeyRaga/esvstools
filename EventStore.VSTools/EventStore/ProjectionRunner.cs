@@ -33,7 +33,7 @@ namespace EventStore.VSTools.EventStore
 
             var location = result.Location;
             var projection = await _httpClient.GetAsync(location + "/state");
-            _publisher.Publish(new ProjectionExecuted(message.Name, projection.Content));
+            _publisher.Publish(new ProjectionExecuted(message.Name, location, projection.Content));
         }
     }
 }

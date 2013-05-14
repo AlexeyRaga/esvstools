@@ -139,6 +139,7 @@
     <Compile Include="EventStore\EventStoreAddress.cs" />
     <Compile Include="EventStore\EventStoreConnectionException.cs" />
     <Compile Include="EventStore\ProjectionRunner.cs" />
+    <Compile Include="EventStore\QueryViewConsumer.cs" />
     <Compile Include="Infrastructure\DowncastingConsumer.cs" />
     <Compile Include="Infrastructure\Hash.cs" />
     <Compile Include="Infrastructure\HttpExtensions.cs" />
@@ -176,9 +177,12 @@
     <Compile Include="EventStorePackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PkgCmdID.cs" />
+    <Compile Include="Views\QueryToolWindowViewModel.cs" />
+    <Compile Include="Views\QueryViewModel.cs" />
     <Compile Include="Views\QueryViewToolWindow.xaml.cs">
       <DependentUpon>QueryViewToolWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DelegateCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">

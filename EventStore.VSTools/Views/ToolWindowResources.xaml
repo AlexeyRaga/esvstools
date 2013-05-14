@@ -9,7 +9,7 @@
             <Style TargetType="{x:Type TabItem}">
                 <Style.Triggers>
                     <Trigger Property="IsSelected" Value="True">
-                        <Setter Property="Background" Value="{DynamicResource VsBrush.FileTabSelectedBackground}"></Setter>
+                        <Setter Property="Background" Value="{DynamicResource VsBrush.CommandBarMenuBorder}"></Setter>
                     </Trigger>
                     <Trigger Property="IsSelected" Value="False">
                         <Setter Property="Background" Value="Transparent"></Setter>
@@ -21,7 +21,7 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type TabItem}">
-                            <Grid Background="{TemplateBinding Background}" SnapsToDevicePixels="true" Height="23">
+                            <Grid Background="{TemplateBinding Background}" SnapsToDevicePixels="true" Height="20">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="25"/>
@@ -29,17 +29,11 @@
                                 <ContentPresenter ContentSource="Header" Margin="10,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <ContentPresenter.Resources>
                                         <Style TargetType="TextBlock">
-                                            <Setter Property="Foreground" Value="{DynamicResource VsBrush.WindowText}"/>
+                                            <Setter Property="Foreground" Value="{DynamicResource VsBrush.ToolWindowText}"/>
                                         </Style>
                                     </ContentPresenter.Resources>
                                 </ContentPresenter>
-                                <Button Grid.Column="1" Height="15" Width="15" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <!--<i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="Click">
-                                            <Actions:CloseTabItemAction TabItem="{Binding RelativeSource={RelativeSource AncestorType=TabItem}}" 
-                                                                        TabControl="{Binding RelativeSource={RelativeSource AncestorType=TabControl}}"/>
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>-->
+                                <Button Grid.Column="1" Height="12" Width="12" HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <Button.Style>
                                         <Style TargetType="{x:Type Button}">
                                             <Setter Property="Background" Value="Transparent"/>
@@ -52,8 +46,8 @@
                                                             <Path x:Name="ButtonPath" 
                                                                 Margin="2"
                                                                 Data="M0,0 L1,1 M0,1 L1,0"
-                                                                Stroke="{DynamicResource VsBrushes.WindowText}" 
-                                                                StrokeThickness="2"
+                                                                Stroke="{DynamicResource VsBrush.ToolWindowText}" 
+                                                                StrokeThickness="1"
                                                                 StrokeStartLineCap="Flat"
                                                                 StrokeEndLineCap="Flat"
                                                                 Stretch="Uniform"
@@ -74,12 +68,12 @@
                                                                 <Setter Property="Visibility" Value="Hidden"/>
                                                             </Trigger>
                                                             <Trigger Property="IsMouseOver" Value="True">
-                                                                <!--<Setter Property="Background" Value="{DynamicResource VsBrush.ToolWindowTabSelectedTab}" />-->
-                                                                <Setter TargetName="ButtonPath" Property="Stroke" Value="{DynamicResource VsBrush.WindowText}"/>
+                                                                <Setter Property="Background" Value="{DynamicResource VsBrushes.ToolWindowBackground}"></Setter>
+                                                                <Setter TargetName="ButtonPath" Property="Stroke" Value="{DynamicResource VsBrush.ToolWindowText}"/>
                                                             </Trigger>
-                                                            <Trigger Property="IsPressed" Value="true">
-                                                                <!--<Setter Property="Background" Value="{DynamicResource VsBrushe.ToolWindowTabSelectedTab}"/>-->
-                                                                <Setter TargetName="ButtonPath" Property="Stroke" Value="{DynamicResource VsBrush.WindowText}"/>
+                                                            <Trigger Property="IsPressed" Value="True">
+                                                                <Setter Property="Background" Value="{DynamicResource VsBrushes.ToolWindowBackground}"></Setter>
+                                                                <Setter TargetName="ButtonPath" Property="Stroke" Value="{DynamicResource VsBrush.ToolWindowText}"/>
                                                                 <Setter TargetName="ButtonPath" Property="Margin" Value="2.5,2.5,1.5,1.5" />
                                                             </Trigger>
                                                         </ControlTemplate.Triggers>
@@ -114,8 +108,8 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <Border Background="Transparent" BorderThickness="0,0,0,3" 
-                                BorderBrush="{DynamicResource VsBrush.ToolWindowBackground}">
+                        <Border Background="Transparent" BorderThickness="0,0,0,1" 
+                                BorderBrush="{DynamicResource VsBrush.CommandBarMenuBorder}">
                             <TabPanel Name="HeaderPanel" Panel.ZIndex="1" Margin="0,0,4,-1" 
                                 IsItemsHost="True" KeyboardNavigation.TabIndex="1"/>
                         </Border>
