@@ -86,7 +86,7 @@
         <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1"/>
         <Icon guid="guidImages" id="bmpPic2" />
         <Strings>
-          <ButtonText>Query View</ButtonText>
+          <ButtonText>EventStore Queries</ButtonText>
         </Strings>
       </Button>
 

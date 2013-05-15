@@ -2,8 +2,10 @@
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
     <Identity Id="ecca8856-78a1-4c99-a6a4-6471bb82cc86" Version="1.0" Language="en-US" Publisher="EventStore" />
-    <DisplayName>EventStore.VS.Tools</DisplayName>
-    <Description>Information about my package</Description>
+    <DisplayName>EventStore VisualStudio Tools</DisplayName>
+    <Description xml:space="preserve">EventStore VisualStudio Package</Description>
+    <Icon>Resources\Package.ico</Icon>
+    <Tags>EventStore</Tags>
   </Metadata>
   <Installation InstalledByMsi="false">
     <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="11.0" />

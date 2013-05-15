@@ -61,7 +61,7 @@ namespace EventStore.VSTools {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Can not create tool window..
+        ///   Looks up a localized string similar to Can not create EventStore Queries window..
         /// </summary>
         internal static string CanNotCreateWindow {
             get {
@@ -70,7 +70,7 @@ namespace EventStore.VSTools {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Query View.
+        ///   Looks up a localized string similar to EventStore Queries.
         /// </summary>
         internal static string ToolWindowTitle {
             get {
