@@ -25,16 +25,13 @@ namespace EventStore.VSTools.Views
         public void OnWindowClosed()
         {
             foreach (var model in Queries)
-                model.StopPeriodicUpdates();
+                model.Stop();
 
         }
 
         public void OnWindowOpened()
         {
-            var selectedModel = Queries.SingleOrDefault(x => x.IsSelected);
 
-            if (selectedModel != null)
-                selectedModel.StartPeriodicUpdates();
         }
 
         internal void ShowQueryResult(string name, string queryUri, string queryResult)
@@ -42,6 +39,7 @@ namespace EventStore.VSTools.Views
             var viewModel = new QueryViewModel(name, queryUri, queryResult);
             Queries.Add(viewModel);
             viewModel.IsSelected = true;
+            viewModel.Start();
         }
     }
 }

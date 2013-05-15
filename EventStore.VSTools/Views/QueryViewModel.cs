@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows.Threading;
 using EventStore.VSTools.Infrastructure;
+using Newtonsoft.Json.Linq;
 
 namespace EventStore.VSTools.Views
 {
@@ -35,11 +36,6 @@ namespace EventStore.VSTools.Views
                 if (_isSelected == value) return;
                 _isSelected = value;
                 OnPropertyChanged("IsSelected");
-
-                if (_isSelected)
-                    StartPeriodicUpdates();
-                else
-                    StopPeriodicUpdates();
             }
         }
 
@@ -53,25 +49,25 @@ namespace EventStore.VSTools.Views
             _timer.Tick += (sender, args) => UpdateQuery();
         }
 
-        public void Close()
-        {
-            _timer.Stop();
-        }
-
         private async void UpdateQuery()
         {
             var client = new SimpleHttpClient();
+            var stats = await client.GetAsync(QueryUri + "/statistics");
             var result = await client.GetAsync(QueryUri + "/state");
+
+            dynamic jsonStats = JObject.Parse(stats.Content);
+            if (jsonStats.projections[0].status == "Completed")
+                Stop();
 
             Dispatcher.CurrentDispatcher.Invoke(() => QueryResult = result.Content);
         }
 
-        public void StopPeriodicUpdates()
+        public void Stop()
         {
             _timer.Stop();
         }
 
-        public void StartPeriodicUpdates()
+        public void Start()
         {
             _timer.Start();
         }
@@ -83,9 +79,7 @@ namespace EventStore.VSTools.Views
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void Dispose()
-        {
-            Close();
-        }
+        public void Close() { _timer.Stop(); }
+        public void Dispose() { Close(); }
     }
 }

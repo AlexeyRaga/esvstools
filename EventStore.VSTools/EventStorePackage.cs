@@ -74,7 +74,6 @@ namespace EventStore.VSTools
             _dispatcher.Subscribe(new ProjectionDeploymentAgent(_dispatcher));
             _dispatcher.Subscribe(new DeploymentProcessOutputConsumer(new OutputMessageWriter()));
             _dispatcher.Subscribe(new ProjectionRunner(_dispatcher));
-            _dispatcher.Subscribe(new PrintToOutputConsumer<ProjectionExecuted>(x => x.Result));
             _dispatcher.Subscribe(new QueryViewConsumer(this));
         }
 
