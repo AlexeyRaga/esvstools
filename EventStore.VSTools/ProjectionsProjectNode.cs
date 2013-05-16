@@ -12,11 +12,17 @@ namespace EventStore.VSTools
     {
         private readonly EventStorePackage _package;
 
+        public int ImageListOffset { get; private set; }
+
         public ProjectionsProjectNode(EventStorePackage package)
         {
             _package = package;
             //SupportsProjectDesigner = true;
             InitializeCATIDs();
+
+            ImageListOffset = ImageHandler.ImageList.Images.Count - 1;
+
+            ImageHandler.AddImage(Resources.script_16xLG);
         }
 
         private void InitializeCATIDs()

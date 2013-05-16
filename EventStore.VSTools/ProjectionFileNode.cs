@@ -16,6 +16,11 @@ namespace EventStore.VSTools
             _project = project;
         }
 
+        public override int ImageIndex
+        {
+            get { return _project.ImageListOffset + 1; }
+        }
+
         protected override int ExecCommandOnNode(Guid cmdGroup, uint cmd, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
             if (cmdGroup == GuidList.guidEventStore_VS_ToolsCmdSet)

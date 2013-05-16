@@ -204,9 +204,14 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Templates\Items\Basic\__TemplateIcon.ico" />
+    <None Include="Resources\script_16xLG.png" />
+    <Content Include="Templates\Items\Basic\__TemplateIcon.ico">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Templates\Items\Basic\Projection.js" />
-    <Content Include="Templates\Projects\Projections\Projections.ico" />
+    <Content Include="Templates\Projects\Projections\Projections.ico">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="packages.config" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
