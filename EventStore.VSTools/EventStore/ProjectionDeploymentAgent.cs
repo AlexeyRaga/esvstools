@@ -26,7 +26,7 @@ namespace EventStore.VSTools.EventStore
 
             if (projectionResponse.StatusCode == HttpStatusCode.NotFound)
             {
-                CreateProjection(message.EventStoreAddress, message.Name, message.Content);
+                CreateProjection(message.EventStoreAddress, message.Name, message.Content, message.Enable, message.EnableCheckpoint, message.EnableEmit);
                 _publisher.Publish(new ProjectionCreated(message.Name));
             }
             else
@@ -46,13 +46,10 @@ namespace EventStore.VSTools.EventStore
             }                
         }
 
-        private async void CreateProjection(string eventStoreAddress, string projectionName, string content)
+        private async void CreateProjection(string eventStoreAddress, string projectionName, string content, bool enable, bool enableCheckpoint, bool enableEmit)
         {
-            const string isEmitEnabled = "no";
-            const string isCheckpointEnabled = "yes";
-            const string isEnabled = "yes";
             var projectionLocation = String.Format("/projections/continuous?name={0}&type=JS&emit={1}&checkpoints={2}&enabled={3}",
-                projectionName, isEmitEnabled, isCheckpointEnabled, isEnabled);
+                projectionName, enableEmit, enableCheckpoint, enable);
 
             var projectionUri = eventStoreAddress + projectionLocation;
 

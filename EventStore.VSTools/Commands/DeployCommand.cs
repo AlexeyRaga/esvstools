@@ -33,8 +33,26 @@ namespace EventStore.VSTools.Commands
 
         private IEnumerable<DeployProjection> BuildDeployCommands(string eventStoreAddress, IEnumerable<ProjectionFileNode> fileNodes)
         {
-            return fileNodes.Select(x => new DeployProjection(eventStoreAddress, GetProjectionName(x), GetProjectionContent(x)));
+            return fileNodes.Select(x => BuildDeployCommand(eventStoreAddress, x));
         } 
+
+        private DeployProjection BuildDeployCommand(string eventStoreAddress, ProjectionFileNode fileNode)
+        {
+            var name = GetProjectionName(fileNode);
+            var content = GetProjectionContent(fileNode);
+
+            var command = new DeployProjection(eventStoreAddress, name, content);
+
+            var props = fileNode.NodeProperties as ProjectionFileNodeProperties;
+            if (props != null)
+            {
+                command.EnableEmit = props.EmitEnabled;
+                command.Enable = props.Enabled;
+                command.EnableCheckpoint = props.CheckpointEnabled;
+            }
+
+            return command;
+        }
 
         private static string GetProjectionName(FileNode node)
         {
