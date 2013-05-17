@@ -22,6 +22,7 @@ namespace EventStore.VSTools
 
             ImageListOffset = ImageHandler.ImageList.Images.Count - 1;
 
+            ImageHandler.AddImage(Resources.projectNodeIcon.ToBitmap());
             ImageHandler.AddImage(Resources.script_16xLG);
         }
 
@@ -35,6 +36,19 @@ namespace EventStore.VSTools
 
             //AddCATIDMapping(typeof(ProjectNodeProperties), typeof(ProjectionsProjectNodeProperties).GUID);
             //AddCATIDMapping(typeof(ProjectionsProjectNodeProperties), typeof(ProjectionsProjectNodeProperties).GUID);
+        }
+
+        protected override bool CanShowDefaultIcon()
+        {
+            return true;
+        }
+
+        public override int ImageIndex
+        {
+            get
+            {
+                return ImageListOffset + 1;
+            }
         }
 
         public override Guid ProjectGuid

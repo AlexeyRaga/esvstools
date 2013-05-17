@@ -18,7 +18,7 @@ namespace EventStore.VSTools
 
         public override int ImageIndex
         {
-            get { return _project.ImageListOffset + 1; }
+            get { return _project.ImageListOffset + 2; }
         }
 
         protected override int ExecCommandOnNode(Guid cmdGroup, uint cmd, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
