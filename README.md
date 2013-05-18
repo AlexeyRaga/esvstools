@@ -1,7 +1,6 @@
-esvstools
+EventStore tools for Visual Studio
 =========
 
-EventStore tools for Visual Studio
 
 **To build**
 ________
