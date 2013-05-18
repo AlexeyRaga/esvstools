@@ -7,13 +7,13 @@ ________
 
 1. Make sure you have VS2012 and VS2102 SDK installed
 2. Open the solution and build it.
-3. The result package will be built as bin\Debug\EventStore.VSTools.vsix od bin\Release\EventStore.VSTools.vsix
+3. The result package can be found as `bin\Debug\EventStore.VSTools.vsix` or `bin\Release\EventStore.VSTools.vsix`
 
 
 **To install**
 __________
 
-1. Build EventStore.VSTools.vsix
+1. Build `EventStore.VSTools.vsix`
 2. Double-click on this file.
 3. Agree to install.
 4. Restart Visual Studio
@@ -32,7 +32,7 @@ ______________________________
 
 1. Right-click on the projections project node and open Properties
 2. Go to Configuration Properties -> EventStore Connection
-3. Type in the connection string field: localhost:2113 (or whatever host name you have the EventStore on)
+3. Type in the connection string field: `localhost:2113` (or whatever host name you have the EventStore on)
 4. Click OK.
 5. Click Save All on the VS toolbar (just in case).
 
