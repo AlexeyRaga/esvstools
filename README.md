@@ -3,7 +3,7 @@ esvstools
 
 EventStore tools for Visual Studio
 
-To build
+**To build**
 ________
 
 1. Make sure you have VS2012 and VS2102 SDK installed
@@ -11,7 +11,7 @@ ________
 3. The result package will be built as bin\Debug\EventStore.VSTools.vsix od bin\Release\EventStore.VSTools.vsix
 
 
-To install
+**To install**
 __________
 
 1. Build EventStore.VSTools.vsix
@@ -20,7 +20,7 @@ __________
 4. Restart Visual Studio
 
 
-To create an EventStore projections project
+**To create an EventStore projections project**
 ___________________________________________
 
 1. In Visual Studio
@@ -28,7 +28,7 @@ ___________________________________________
 3. Find and select the EventStore -> Projections Project template
 4. Click OK.
 
-To connect with the EventStore
+**To connect with the EventStore**
 ______________________________
 
 1. Right-click on the projections project node and open Properties
@@ -37,7 +37,7 @@ ______________________________
 4. Click OK.
 5. Click Save All on the VS toolbar (just in case).
 
-To run projection as a query
+**To run projection as a query**
 ____________________________
 
 1. Be sure that the Event Store connection is specified
@@ -45,7 +45,7 @@ ____________________________
 3. Click on the "Run as a Query" menu.
 4. The Query Tool window will pop up and will show you the result of the query. The result will be automatically updated until it the query is done.
 
-To deploy all the projections into the EventStore
+**To deploy all the projections into the EventStore**
 _________________________________________________
 
 1. Be sure that the Event Store connection is specified
@@ -53,7 +53,7 @@ _________________________________________________
 3. Click on the "Deploy to EventStore" menu
 4. You may watch what is happening in the Output window (the EventStore category)
 
-To make it better
+**To make it better**
 _________________
 
 1. Go to https://github.com/AlexeyRaga/esvstools
