@@ -61,7 +61,7 @@ namespace EventStore.VSTools {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Can not create EventStore Queries window..
+        ///   Looks up a localized string similar to Cannot create EventStore Queries window..
         /// </summary>
         internal static string CanNotCreateWindow {
             get {

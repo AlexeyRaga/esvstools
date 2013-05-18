@@ -77,7 +77,7 @@
         <Parent guid="guidEventStore_VS_ToolsCmdSet" id="ItemNodeGroup" />
         <Icon guid="guidImages" id="runQueryPic" />
         <Strings>
-          <ButtonText>Run Projection</ButtonText>
+          <ButtonText>Run as a Query</ButtonText>
         </Strings>
       </Button>
 
