@@ -31,5 +31,11 @@ namespace EventStore.VSTools.Views
         {
             if (_action != null) _action(parameter);
         }
+
+        public void UpdateStatus()
+        {
+            var evt = CanExecuteChanged;
+            if (evt != null) evt(this, EventArgs.Empty);
+        }
     }
 }

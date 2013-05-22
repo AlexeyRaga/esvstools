@@ -1,0 +1,119 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase">
+
+    <SolidColorBrush x:Key="ForegroundText" Color="{DynamicResource VsColor.ToolWindowText}"></SolidColorBrush>
+    <SolidColorBrush x:Key="InputForegroundText" Color="{DynamicResource VsColor.ToolWindowText}"></SolidColorBrush>
+    <SolidColorBrush x:Key="ContentBackground" Color="{DynamicResource VsColor.ToolWindowBackground}"></SolidColorBrush>
+    <SolidColorBrush x:Key="AsideBackground" Color="{DynamicResource VsColor.CommandBarMenuBorder}"></SolidColorBrush>
+    <SolidColorBrush x:Key="InputControlBackround" Color="{DynamicResource VsColor.DropDownMouseOverBackgroundMiddle1}"></SolidColorBrush>
+    <SolidColorBrush x:Key="ActiveInputControlBackground" Color="{DynamicResource VsColor.DropDownMouseOverBackgroundMiddle1}"></SolidColorBrush>
+    <SolidColorBrush x:Key="InputControlBorder" Color="{DynamicResource VsColor.CommandBarMenuBorder}"></SolidColorBrush>
+    <SolidColorBrush x:Key="ActiveInputControlBorder" Color="{DynamicResource VsColor.Highlight}"></SolidColorBrush>
+
+    <Style TargetType="TextBox">
+        <Setter Property="Background" Value="{DynamicResource InputControlBackround}"></Setter>
+        <Setter Property="Height" Value="17"></Setter>
+        <Setter Property="BorderThickness" Value="1"></Setter>
+        <Setter Property="Foreground" Value="{DynamicResource InputForegroundText}"></Setter>
+        <Style.Triggers>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="BorderBrush" Value="{DynamicResource ActiveInputControlBorder}"></Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Label">
+        <Setter Property="Foreground" Value="{DynamicResource InputForegroundText}"></Setter>
+    </Style>
+    <Style TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource InputForegroundText}"></Setter>
+    </Style>
+    <Style TargetType="Button">
+        <Setter Property="Margin" Value="3,0,3,0"></Setter>
+        <Setter Property="Width" Value="75"></Setter>
+        <Setter Property="Height" Value="23"></Setter>
+    </Style>
+
+    <Style TargetType="{x:Type CheckBox}">
+        <Setter Property="FocusVisualStyle">
+            <Setter.Value>
+                <Style>
+                    <Setter Property="Control.Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Rectangle Margin="2" SnapsToDevicePixels="True" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="{DynamicResource InputControlBackround}"/>
+        <Setter Property="BorderBrush" Value="#FF707070"/>
+        <Setter Property="Foreground" Value="{DynamicResource InputForegroundText}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type CheckBox}">
+                    <Grid x:Name="templateRoot" Background="Transparent" SnapsToDevicePixels="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border x:Name="checkBoxBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="1" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                            <Grid x:Name="markGrid">
+                                <Path x:Name="optionMark" Data="F1M9.97498,1.22334L4.6983,9.09834 4.52164,9.09834 0,5.19331 1.27664,3.52165 4.255,6.08833 8.33331,1.52588E-05 9.97498,1.22334z" Fill="{TemplateBinding Foreground}" Margin="1" Opacity="0" Stretch="None"/>
+                                <Rectangle x:Name="indeterminateMark" Fill="#FF212121" Margin="2" Opacity="0"/>
+                            </Grid>
+                        </Border>
+                        <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="1" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="HasContent" Value="True">
+                            <Setter Property="FocusVisualStyle">
+                                <Setter.Value>
+                                    <Style>
+                                        <Setter Property="Control.Template">
+                                            <Setter.Value>
+                                                <ControlTemplate>
+                                                    <Rectangle Margin="14,0,0,0" SnapsToDevicePixels="True" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Padding" Value="4,-1,0,0"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" TargetName="checkBoxBorder" Value="{DynamicResource ActiveInputControlBackground}"/>
+                            <Setter Property="BorderBrush" TargetName="checkBoxBorder" Value="{DynamicResource ActiveInputControlBorder}"/>
+                            <Setter Property="Fill" TargetName="optionMark" Value="{DynamicResource InputForegroundText}"/>
+                            <Setter Property="Fill" TargetName="indeterminateMark" Value="{DynamicResource InputForegroundText}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" TargetName="checkBoxBorder" Value="Transparent"/>
+                            <Setter Property="BorderBrush" TargetName="checkBoxBorder" Value="#FF707070"/>
+                            <Setter Property="Fill" TargetName="optionMark" Value="#FF707070"/>
+                            <Setter Property="Fill" TargetName="indeterminateMark" Value="#FF707070"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" TargetName="checkBoxBorder" Value="{DynamicResource ActiveInputControlBackground}"/>
+                            <Setter Property="BorderBrush" TargetName="checkBoxBorder" Value="{DynamicResource ActiveInputControlBorder}"/>
+                            <Setter Property="Fill" TargetName="optionMark" Value="{DynamicResource ForegroundText}"/>
+                            <Setter Property="Fill" TargetName="indeterminateMark" Value="{DynamicResource ForegroundText}"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Opacity" TargetName="optionMark" Value="1"/>
+                            <Setter Property="Opacity" TargetName="indeterminateMark" Value="0"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="{x:Null}">
+                            <Setter Property="Opacity" TargetName="optionMark" Value="0"/>
+                            <Setter Property="Opacity" TargetName="indeterminateMark" Value="1"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

@@ -2,8 +2,8 @@
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
     <Identity Id="ecca8856-78a1-4c99-a6a4-6471bb82cc86" Version="0.9" Language="en-US" Publisher="Alexey Raga" />
-    <DisplayName>EventStore VisualStudio Tools</DisplayName>
-    <Description xml:space="preserve">EventStore VisualStudio Package</Description>
+    <DisplayName>EventStore Tools for Visual Studio</DisplayName>
+    <Description xml:space="preserve">Adds EventStore support to Visual Studio</Description>
     <License>Resources\license.txt</License>
     <Icon>Resources\Package.ico</Icon>
     <Tags>EventStore</Tags>
@@ -19,5 +19,6 @@
     <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
     <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="Project" Path="ProjectTemplates" d:ProjectName="%CurrentProject%" d:TargetPath="|%CurrentProject%;TemplateProjectOutputGroup|" d:VsixSubPath="ProjectTemplates" />
     <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="%CurrentProject%" d:TargetPath="|%CurrentProject%;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
+    <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" AssemblyName="|%CurrentProject%;AssemblyName|" />
   </Assets>
 </PackageManifest>

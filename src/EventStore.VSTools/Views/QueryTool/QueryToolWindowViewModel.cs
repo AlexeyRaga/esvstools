@@ -1,8 +1,7 @@
 ﻿using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Input;
 
-namespace EventStore.VSTools.Views
+namespace EventStore.VSTools.Views.QueryTool
 {
     public sealed class QueryToolWindowViewModel
     {

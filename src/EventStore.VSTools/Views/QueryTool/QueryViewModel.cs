@@ -4,7 +4,7 @@ using System.Windows.Threading;
 using EventStore.VSTools.Infrastructure;
 using Newtonsoft.Json.Linq;
 
-namespace EventStore.VSTools.Views
+namespace EventStore.VSTools.Views.QueryTool
 {
     public sealed class QueryViewModel : INotifyPropertyChanged, IDisposable
     {

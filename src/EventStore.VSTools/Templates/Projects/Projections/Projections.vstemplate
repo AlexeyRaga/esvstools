@@ -20,4 +20,8 @@
       <ProjectItem ReplaceParameters="true" OpenInEditor="true">Projection.js</ProjectItem>
     </Project>
   </TemplateContent>
+  <WizardExtension>
+    <Assembly>EventStore.VSTools, Version=1.0.0.0, Culture=neutral, PublicKeyToken=4fa0e4a8ea7982a8</Assembly>
+    <FullClassName>EventStore.VSTools.CreateProjectWizard</FullClassName>
+  </WizardExtension>
 </VSTemplate>

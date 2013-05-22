@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace EventStore.VSTools.Infrastructure
 {
@@ -96,6 +97,11 @@ namespace EventStore.VSTools.Infrastructure
             StatusCode = statusCode;
             Content = content;
             Location = location;
+        }
+
+        public dynamic GetJsonContentAsDynamic()
+        {
+            return JObject.Parse(Content);
         }
     }
 }

@@ -70,6 +70,15 @@ namespace EventStore.VSTools {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to EventStore Projections Project.
+        /// </summary>
+        internal static string ProjectionsProjectTitle {
+            get {
+                return ResourceManager.GetString("ProjectionsProjectTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon projectNodeIcon {
@@ -95,6 +104,42 @@ namespace EventStore.VSTools {
         internal static string ToolWindowTitle {
             get {
                 return ResourceManager.GetString("ToolWindowTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pull Down Projections From the EventStore.
+        /// </summary>
+        internal static string Wizard_DownloadProjections {
+            get {
+                return ResourceManager.GetString("Wizard_DownloadProjections", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EventStore Connection.
+        /// </summary>
+        internal static string Wizard_EventStoreConnection {
+            get {
+                return ResourceManager.GetString("Wizard_EventStoreConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This wizard will help you to import the existing projections from the EventStore into this project. Click &quot;Next&quot; if you want to proceed, or cancel this wizard if you want to start with clean project..
+        /// </summary>
+        internal static string Wizard_StartPageContent {
+            get {
+                return ResourceManager.GetString("Wizard_StartPageContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import projections from the EventStore.
+        /// </summary>
+        internal static string Wizard_StartPageTitle {
+            get {
+                return ResourceManager.GetString("Wizard_StartPageTitle", resourceCulture);
             }
         }
     }

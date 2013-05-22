@@ -1,9 +1,10 @@
-﻿using Microsoft.VisualStudio.TemplateWizard;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using EventStore.VSTools.Views.CreateProject;
+using Microsoft.VisualStudio.TemplateWizard;
 
 namespace EventStore.VSTools
 {
-    public sealed class ProjectWizard : IWizard
+    public sealed class CreateProjectWizard : IWizard
     {
         public void BeforeOpeningFile(EnvDTE.ProjectItem projectItem)
         {
@@ -27,12 +28,15 @@ namespace EventStore.VSTools
 
         public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
         {
-            
+            var viewModel = new CreateProjectViewModel();
+            var view = new CreateProjectWizardView(viewModel);
+            view.ShowDialog();
+
         }
 
         public bool ShouldAddProjectItem(string filePath)
         {
-            return true;
+            return false;
         }
     }
 }

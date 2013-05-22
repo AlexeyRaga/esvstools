@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using EventStore.VSTools.Views;
+using EventStore.VSTools.Views.QueryTool;
 using Microsoft.VisualStudio.Shell;
 
 namespace EventStore.VSTools

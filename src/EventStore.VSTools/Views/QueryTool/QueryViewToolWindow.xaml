@@ -1,9 +1,10 @@
-﻿<UserControl x:Class="EventStore.VSTools.Views.QueryViewToolWindow"
+﻿<UserControl x:Class="EventStore.VSTools.Views.QueryTool.QueryViewToolWindow"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:views="clr-namespace:EventStore.VSTools.Views"
+             xmlns:queryTool="clr-namespace:EventStore.VSTools.Views.QueryTool"
              mc:Ignorable="d"
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
@@ -61,7 +62,7 @@
                                     <Button Grid.Column="1" Height="12" Width="12" HorizontalAlignment="Center" VerticalAlignment="Center">
                                         <Button.Style>
                                             <Style TargetType="{x:Type Button}">
-                                                <Setter Property="Command" Value="{Binding DataContext.CloseTabCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:QueryViewToolWindow}}}"></Setter>
+                                                <Setter Property="Command" Value="{Binding DataContext.CloseTabCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type queryTool:QueryViewToolWindow}}}"></Setter>
                                                 <Setter Property="CommandParameter" Value="{Binding}"></Setter>
                                                 <Setter Property="Background" Value="Transparent"/>
                                                 <Setter Property="Cursor" Value="Hand"/>

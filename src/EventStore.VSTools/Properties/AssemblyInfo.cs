@@ -7,11 +7,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("EventStore VisualStudio Tools")]
+[assembly: AssemblyTitle("EventStore Tools for Visual Studio")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Alexey Raga")]
-[assembly: AssemblyProduct("EventStore VisualStudio Tools")]
+[assembly: AssemblyProduct("EventStore Tools for Visual Studio")]
 [assembly: AssemblyCopyright("Alexey Raga")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]   
@@ -31,7 +31,7 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-[assembly: InternalsVisibleTo("EventStore.Vs.Tools.Tests")]
+//[assembly: InternalsVisibleTo("EventStore.Vs.Tools.Tests")]
 
 
 

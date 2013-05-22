@@ -130,4 +130,19 @@
   <data name="projectNodeIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\projectNodeIcon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Wizard_DownloadProjections" xml:space="preserve">
+    <value>Pull Down Projections From the EventStore</value>
+  </data>
+  <data name="Wizard_EventStoreConnection" xml:space="preserve">
+    <value>EventStore Connection</value>
+  </data>
+  <data name="ProjectionsProjectTitle" xml:space="preserve">
+    <value>EventStore Projections Project</value>
+  </data>
+  <data name="Wizard_StartPageContent" xml:space="preserve">
+    <value>This wizard will help you to import the existing projections from the EventStore into this project. Click "Next" if you want to proceed, or cancel this wizard if you want to start with clean project.</value>
+  </data>
+  <data name="Wizard_StartPageTitle" xml:space="preserve">
+    <value>Import projections from the EventStore</value>
+  </data>
 </root>

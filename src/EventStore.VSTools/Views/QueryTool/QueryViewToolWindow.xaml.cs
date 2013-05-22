@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace EventStore.VSTools.Views
+namespace EventStore.VSTools.Views.QueryTool
 {
     /// <summary>
     /// Interaction logic for QueryView.xaml
