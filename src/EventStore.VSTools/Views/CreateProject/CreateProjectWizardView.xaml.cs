@@ -10,6 +10,12 @@ namespace EventStore.VSTools.Views.CreateProject
         public CreateProjectWizardView(CreateProjectViewModel viewModel)
         {
             InitializeComponent();
+            viewModel.OnClose = result =>
+                {
+                    DialogResult = result;
+                    Close();
+                };
+
             DataContext = viewModel;
         }
     }

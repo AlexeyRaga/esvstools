@@ -23,6 +23,8 @@ namespace EventStore.VSTools.Views.CreateProject
         public ICommand CancelCommand { get; private set; }
         public ICommand FinishCommand { get; private set; }
 
+        public Action<bool> OnClose;
+
         public PageViewModel ActivePage
         {
             get { return _activePage; }
@@ -62,12 +64,12 @@ namespace EventStore.VSTools.Views.CreateProject
 
         private void OnCancel()
         {
-            
+            OnClose(false);
         }
 
         private void OnFinish()
         {
-            
+            OnClose(true);
         }
 
         private void OnPrev()

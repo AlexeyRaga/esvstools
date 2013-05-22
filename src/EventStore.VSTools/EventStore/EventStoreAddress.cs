@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net;
-using EventStore.VSTools;
 using Microsoft.VisualStudio.Project;
 
 namespace EventStore.VSTools.EventStore
