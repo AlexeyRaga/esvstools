@@ -50,7 +50,11 @@ namespace EventStore.VSTools.Views.CreateProject
                 throw new EventStoreConnectionException(
                     String.Format("Cannot connect to {0} to get the projections list", _knownConnection), response.Status);
 
-            var projections = response.Result.Select(x => new ImportProjectionInfo(true, x)).ToList();
+            var projections = response.Result
+                                      .Where(x => !String.IsNullOrWhiteSpace(x.Name))
+                                      .Where(x => !x.Name.StartsWith("$"))
+                                      .Select(x => new ImportProjectionInfo(true, x))
+                                      .ToList();
 
             ExistingProjections.Clear();
             projections.ForEach(ExistingProjections.Add);
