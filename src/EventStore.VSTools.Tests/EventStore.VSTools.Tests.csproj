@@ -68,8 +68,8 @@
     <Compile Include="EventStore\EndPointTest.cs" />
     <Compile Include="EventStore\MessageTopicsTest.cs" />
     <Compile Include="EventStore\OutputConsumerTest.cs" />
-    <Compile Include="EventStore\ProjectionDeploymentAgentTest.cs" />
     <Compile Include="EventStore\ProjectionDeploymentTest.cs" />
+    <Compile Include="EventStore\ProjectionManagerTests.cs" />
     <Compile Include="FakeHttpClient.cs" />
     <Compile Include="FakeOutput.cs" />
     <Compile Include="FakePublisher.cs" />
