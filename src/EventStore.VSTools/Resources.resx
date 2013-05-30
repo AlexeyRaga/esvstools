@@ -145,4 +145,16 @@
   <data name="Wizard_StartPageTitle" xml:space="preserve">
     <value>Import projections from the EventStore</value>
   </data>
+  <data name="Wizard_FinishPageTitle" xml:space="preserve">
+    <value>Import projections from the EventStore</value>
+  </data>
+  <data name="Wizard_ImportProjectionsCheck" xml:space="preserve">
+    <value>Import projections into the project</value>
+  </data>
+  <data name="Wizard_ProjectionsToImport" xml:space="preserve">
+    <value>The following projections will be imported:</value>
+  </data>
+  <data name="Wizard_FinishPage_NoImport" xml:space="preserve">
+    <value>No projections will be imported</value>
+  </data>
 </root>

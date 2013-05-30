@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net;
 using EventStore.VSTools.EventStore;
-using EventStore.VSTools.Infrastructure;
 
 namespace EventStore.VSTools.Views.CreateProject
 {
@@ -12,71 +9,70 @@ namespace EventStore.VSTools.Views.CreateProject
     {
         private string _knownConnection;
         private readonly WizardState _state;
-        private readonly IHttpClient _httpClient;
+        private readonly Func<string, IProjectionsManager> _projectionsManagerFactory;
 
-        public ObservableCollection<ProjectionInfo> ExistingProjections { get; private set; }
+        public ObservableCollection<ImportProjectionInfo> ExistingProjections { get; private set; }
 
-        public ImportProjectionsPageViewModel(WizardState state, IHttpClient httpClient)
+        public ImportProjectionsPageViewModel(WizardState state, Func<string, IProjectionsManager> projectionsManagerFactory)
         {
             _state = state;
-            _httpClient = httpClient;
+            _projectionsManagerFactory = projectionsManagerFactory;
 
-            ExistingProjections = new ObservableCollection<ProjectionInfo>();
+            ExistingProjections = new ObservableCollection<ImportProjectionInfo>();
         }
 
         public override void Activate()
         {
+            base.Activate();
+
             //already activated, nothing has changed
             if (_knownConnection == _state.EventStoreConnection) return;
             _knownConnection = _state.EventStoreConnection;
 
-            GetProjectionsListFromEventStore();
+            GetProjectionsListFromEventStoreAsync();
         }
 
-        private async void GetProjectionsListFromEventStore()
+        public override void Deactivate()
         {
-            var eventStoreAddress = EventStoreAddress.Get(_knownConnection);
-            var allProjectionsUrl = eventStoreAddress + "/projections/all-non-transient";
-            var response = await _httpClient.GetAsync(allProjectionsUrl);
+            _state.ProjectionsToImport.Clear();
+            if (ShouldImportProjections)
+                _state.ProjectionsToImport.AddRange(ExistingProjections.Where(x=>x.IsSelected).Select(x=>x.Projection));
 
-            if (response.StatusCode != HttpStatusCode.OK)
+            base.Deactivate();
+        }
+
+        private async void GetProjectionsListFromEventStoreAsync()
+        {
+            var manager = _projectionsManagerFactory(_state.EventStoreConnection);
+            var response = await manager.GetAllNonTransientAsync();
+
+            if (!response.IsSuccessful)
                 throw new EventStoreConnectionException(
-                    String.Format("Cannot connect to {0} to get the projections list", _knownConnection), response.StatusCode);
+                    String.Format("Cannot connect to {0} to get the projections list", _knownConnection), response.Status);
 
-            var projections = BuildProjectionInfosFromResponse(response).ToList();
+            var projections = response.Result.Select(x => new ImportProjectionInfo(true, x)).ToList();
 
             ExistingProjections.Clear();
             projections.ForEach(ExistingProjections.Add);
         }
 
-        private IEnumerable<ProjectionInfo> BuildProjectionInfosFromResponse(HttpResponse response)
-        {
-            var jsonContent = response.GetJsonContentAsDynamic();
-
-            foreach (var projInfo in jsonContent.projections)
-            {
-                if (projInfo != null && !((string)projInfo.effectiveName).StartsWith("$"))
-                    yield return new ProjectionInfo
-                        {
-                            IsSelected = true,
-                            Name = projInfo.effectiveName,
-                            Mode = projInfo.mode,
-                            Location = projInfo.statusUrl,
-                        };
-            }
-        }
+        public bool ShouldImportProjections { get; set; }
 
         public override string Title
         {
             get { return Resources.Wizard_DownloadProjections; }
         }
-    }
 
-    public sealed class ProjectionInfo
-    {
-        public bool IsSelected { get; set; }
-        public string Name { get; set; }
-        public string Mode { get; set; }
-        public string Location { get; set; }
+        public sealed class ImportProjectionInfo
+        {
+            public ProjectionStatistics Projection { get; private set; }
+            public bool IsSelected { get; set; }
+
+            public ImportProjectionInfo(bool isSelected, ProjectionStatistics projection)
+            {
+                IsSelected = isSelected;
+                Projection = projection;
+            }
+        }
     }
 }

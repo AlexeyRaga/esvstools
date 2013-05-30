@@ -220,8 +220,8 @@ namespace Microsoft.VisualStudio.Project
                     if(provider != null)
                     {
                         IReferenceContainer referenceContainer = provider.GetReferenceContainer();
+                        if (referenceContainer == null) continue;
 
-                        Debug.Assert(referenceContainer != null, "Could not found the References virtual node");
                         ProjectReferenceNode projectReferenceNode = GetProjectReferenceOnNodeForHierarchy(referenceContainer.EnumReferences(), inputHierarchy);
                         if(projectReferenceNode != null)
                         {

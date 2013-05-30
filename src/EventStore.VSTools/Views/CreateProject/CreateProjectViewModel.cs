@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using EventStore.VSTools.Infrastructure;
+using EventStore.VSTools.EventStore;
 using ICommand = System.Windows.Input.ICommand;
 
 namespace EventStore.VSTools.Views.CreateProject
@@ -40,12 +40,13 @@ namespace EventStore.VSTools.Views.CreateProject
             }
         }
 
-        public CreateProjectViewModel()
+        public CreateProjectViewModel(Func<string, IProjectionsManager> projectionsManagerFactory)
         {
             State = new WizardState {EventStoreConnection = "localhost:2113"};
             _pages.Add(new StartPageViewModel(State));
             _pages.Add(new EventStoreConnectionPageViewModel(State));
-            _pages.Add(new ImportProjectionsPageViewModel(State, new SimpleHttpClient()));
+            _pages.Add(new ImportProjectionsPageViewModel(State, projectionsManagerFactory));
+            _pages.Add(new FinishPageViewModel(State));
 
             NextCommand     = BuildCommand(_ => ActivePage != _pages.Last(), _ => OnNext());
             PrevCommand     = BuildCommand(_ => ActivePage != _pages.First(), _ => OnPrev());

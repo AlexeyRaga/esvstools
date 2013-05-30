@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -98,10 +99,21 @@ namespace EventStore.VSTools.Infrastructure
             Content = content;
             Location = location;
         }
+    }
 
-        public dynamic GetJsonContentAsDynamic()
+    public static class HttpResponseExtensions
+    {
+        public static dynamic GetJsonContentAsDynamic(this HttpResponse response)
         {
-            return JObject.Parse(Content);
+            return JObject.Parse(response.Content);
+        }
+
+        public static bool HasStatus(this HttpResponse response, params HttpStatusCode[] expected)
+        {
+            if (response == null) throw new ArgumentNullException("response");
+            if (expected == null) throw new ArgumentNullException("expected");
+
+            return (expected.Contains(response.StatusCode));
         }
     }
 }

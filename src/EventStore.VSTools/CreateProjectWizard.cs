@@ -1,4 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using EventStore.VSTools.EventStore;
+using EventStore.VSTools.Infrastructure;
 using EventStore.VSTools.Views.CreateProject;
 using Microsoft.VisualStudio.TemplateWizard;
 
@@ -13,28 +19,67 @@ namespace EventStore.VSTools
 
         public void ProjectFinishedGenerating(EnvDTE.Project project)
         {
-            var viewModel = new CreateProjectViewModel();
+            var viewModel = new CreateProjectViewModel(BuildProjectionManager);
             var view = new CreateProjectWizardView(viewModel);
-            if (view.ShowDialog().GetValueOrDefault(false))
-            {
-                var projectNode = project.Object as ProjectionsProjectNode;
-                if (projectNode == null)
-                {
-                    Output.Pane.OutputStringThreadSafe(string.Format(
-                        "Wrong project node. Actual type is: {0}",
-                        project.Object == null ? "<null>" : project.Object.GetType().FullName));
+            if (!view.ShowDialog().GetValueOrDefault(false)) return;
 
-                    return;
+            var projectNode = (ProjectionsProjectNode) project.Object;
+
+            if (viewModel.State.ProjectionsToImport.Any())
+            {
+                var projectionsManager = BuildProjectionManager(viewModel.State.EventStoreConnection);
+                AsyncHelpers.RunSync(() => ImportProjectionsAsync(projectNode, projectionsManager, viewModel.State.ProjectionsToImport));
+            }
+
+            project.Save();
+        }
+
+
+        private IProjectionsManager BuildProjectionManager(string connection)
+        {
+            return new ProjectionsManager(connection, new SimpleHttpClient());
+        }
+
+        private static async Task ImportProjectionsAsync(ProjectionsProjectNode project, IProjectionsManager projectionsManager, IList<ProjectionStatistics> projections)
+        {
+            foreach (var projection in projections)
+            {
+                var configResponse = await projectionsManager.GetConfigAsync(projection.Name);
+
+                if (!configResponse.IsSuccessful)
+                {
+                    Output.Pane.OutputStringThreadSafe(
+                        string.Format("Unable to fetch projection {0}, server returned {1}", projection.Name,
+                                      configResponse.Status));
+                    continue;
                 }
 
-                projectNode.SetProjectProperty(Constants.EventStore.ConnectionString, viewModel.State.EventStoreConnection);
-                project.Save();
+
+                AddProjectionFileIntoProject(project, configResponse.Result, projection);
             }
+        }
+
+        private static void AddProjectionFileIntoProject(ProjectionsProjectNode project, ProjectionConfig config, ProjectionStatistics stats)
+        {
+            var name = config.Name;
+            var query = config.Query;
+
+            //create file and node
+            var projectionNode = (ProjectionFileNode)project.CreateFileNode(name + ".js");
+            File.WriteAllText(projectionNode.Url, query);
+
+            //set node properties
+            var nodeProps = (ProjectionFileNodeProperties) projectionNode.NodeProperties;
+            nodeProps.Enabled = stats.IsEnabled;
+            nodeProps.EmitEnabled = config.IsEmitEnabled;
+            nodeProps.CheckpointEnabled = "continuous".Equals(stats.Mode, StringComparison.InvariantCultureIgnoreCase);
+
+            //finally add the node into the project
+            project.AddChild(projectionNode);
         }
 
         public void ProjectItemFinishedGenerating(EnvDTE.ProjectItem projectItem)
         {
-            
         }
 
         public void RunFinished()

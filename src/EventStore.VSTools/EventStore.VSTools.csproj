@@ -139,14 +139,19 @@
     <Compile Include="Commands\IVsCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\ToolWindowCommand.cs" />
-    <Compile Include="Constants.cs" />
+    <Compile Include="EventStore\ProjectionConfig.cs" />
+    <Compile Include="EventStore\ProjectionStatistics.cs" />
+    <Compile Include="Views\Constants.cs" />
     <Compile Include="EnumerableExtensions.cs" />
+    <Compile Include="EventStore\ProjectionsManager.cs" />
+    <Compile Include="Infrastructure\AsyncHelper.cs" />
     <Compile Include="Views\CreateProject\CreateProjectViewModel.cs" />
     <Compile Include="CreateProjectWizard.cs" />
     <Compile Include="Views\CreateProject\CreateProjectWizardView.xaml.cs">
       <DependentUpon>CreateProjectWizardView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CreateProject\EventStoreConnectionPageViewModel.cs" />
+    <Compile Include="Views\CreateProject\FinishPageViewModel.cs" />
     <Compile Include="Views\CreateProject\ImportProjectionsPageViewModel.cs" />
     <Compile Include="Views\CreateProject\PageViewModel.cs" />
     <Compile Include="EventStore\DeploymentProcessOutputConsumer.cs" />

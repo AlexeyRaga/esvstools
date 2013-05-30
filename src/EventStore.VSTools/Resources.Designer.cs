@@ -126,6 +126,42 @@ namespace EventStore.VSTools {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No projections will be imported.
+        /// </summary>
+        internal static string Wizard_FinishPage_NoImport {
+            get {
+                return ResourceManager.GetString("Wizard_FinishPage_NoImport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import projections from the EventStore.
+        /// </summary>
+        internal static string Wizard_FinishPageTitle {
+            get {
+                return ResourceManager.GetString("Wizard_FinishPageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import projections into the project.
+        /// </summary>
+        internal static string Wizard_ImportProjectionsCheck {
+            get {
+                return ResourceManager.GetString("Wizard_ImportProjectionsCheck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following projections will be imported:.
+        /// </summary>
+        internal static string Wizard_ProjectionsToImport {
+            get {
+                return ResourceManager.GetString("Wizard_ProjectionsToImport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This wizard will help you to import the existing projections from the EventStore into this project. Click &quot;Next&quot; if you want to proceed, or cancel this wizard if you want to start with clean project..
         /// </summary>
         internal static string Wizard_StartPageContent {
