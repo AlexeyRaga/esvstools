@@ -5,7 +5,7 @@ EventStore tools for Visual Studio
 **To build**
 ________
 
-1. Make sure you have VS2012 and VS2102 SDK installed
+1. Make sure you have VS2012 and VS2012 SDK installed
 2. Open the solution and build it.
 3. The result package can be found as `bin\Debug\EventStore.VSTools.vsix` or `bin\Release\EventStore.VSTools.vsix`
 
