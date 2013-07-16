@@ -27,9 +27,19 @@ namespace EventStore.VSTools.EventStore
             var projectionUri = message.EventStoreAddress + TransientProjectionUri;
 
             var result = await _httpClient.PostAsync(projectionUri, message.Content);
+
             if (result.StatusCode != HttpStatusCode.OK && result.StatusCode != HttpStatusCode.Created)
-                throw new EventStoreConnectionException(
-                    string.Format("Unable to execute projection '{0}'", message.Name), result.StatusCode);
+            {
+                var status = string.Format("{0}, {1}", (int) result.StatusCode, result.StatusCode.ToString().Wordify());
+
+                var content = (!string.IsNullOrEmpty(result.Content)) ? result.Content : status;
+                content = string.Format("Unable to execute projection '{0}': {1}", message.Name, content);
+                var errorEvent = new EventStoreConnectionError(status, content);
+
+                _publisher.Publish(errorEvent);
+
+                return;
+            }
 
             var location = result.Location;
             var projection = await _httpClient.GetAsync(location + "/state");

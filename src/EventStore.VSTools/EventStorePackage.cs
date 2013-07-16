@@ -78,6 +78,7 @@ namespace EventStore.VSTools
             _dispatcher.Subscribe(new DeploymentProcessOutputConsumer(new OutputMessageWriter()));
             _dispatcher.Subscribe(new ProjectionRunner(_dispatcher));
             _dispatcher.Subscribe(new QueryViewConsumer(this));
+            _dispatcher.Subscribe(new ErrorMessageConsumer(new ErrorMessageWriter()));
         }
 
         private IEnumerable<IVsCommand> BuildCommands()

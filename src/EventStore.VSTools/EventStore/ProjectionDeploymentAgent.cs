@@ -36,8 +36,13 @@ namespace EventStore.VSTools.EventStore
             else
             {
                 //new projection
-                await projectionsManager.CreateProjectionAsync(message.Name, message.Content, message.Enable,
-                                                         message.EnableCheckpoint, message.EnableEmit);
+                await projectionsManager.CreateProjectionAsync(
+                    message.Name,
+                    message.Content,
+                    message.Enable,
+                    message.EnableCheckpoint,
+                    message.EnableEmit);
+
                 _publisher.Publish(new ProjectionCreated(message.Name));
             }             
         }

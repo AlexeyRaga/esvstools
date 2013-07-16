@@ -71,10 +71,17 @@ namespace EventStore.VSTools.Infrastructure
 
             using (var client = new HttpClient())
             {
-                var result = await client.SendAsync(request);
-                var location = result.Headers.Location == null ? String.Empty : result.Headers.Location.ToString();
-                var response = await result.Content.ReadAsStringAsync();
-                return new HttpResponse(result.StatusCode, response, location);
+                try
+                {
+                    var result = await client.SendAsync(request);
+                    var location = result.Headers.Location == null ? String.Empty : result.Headers.Location.ToString();
+                    var response = await result.Content.ReadAsStringAsync();
+                    return new HttpResponse(result.StatusCode, response, location);
+                }
+                catch (HttpRequestException ex)
+                {
+                    return new HttpResponse(HttpStatusCode.BadGateway, ex.GetDeepMessage(), String.Empty);
+                }
             }
         }
 
@@ -108,7 +115,7 @@ namespace EventStore.VSTools.Infrastructure
             return JObject.Parse(response.Content);
         }
 
-        public static bool HasStatus(this HttpResponse response, params HttpStatusCode[] expected)
+        public static bool InStatus(this HttpResponse response, params HttpStatusCode[] expected)
         {
             if (response == null) throw new ArgumentNullException("response");
             if (expected == null) throw new ArgumentNullException("expected");

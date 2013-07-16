@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using EventStore.VSTools.EventStore;
@@ -44,11 +45,22 @@ namespace EventStore.VSTools.Views.CreateProject
         private async void GetProjectionsListFromEventStoreAsync()
         {
             var manager = _projectionsManagerFactory(_state.EventStoreConnection);
-            var response = await manager.GetAllNonTransientAsync();
 
-            if (!response.IsSuccessful)
-                throw new EventStoreConnectionException(
-                    String.Format("Cannot connect to {0} to get the projections list", _knownConnection), response.Status);
+            EventStoreResponse<List<ProjectionStatistics>> response;
+            try
+            {
+                response = await manager.GetAllNonTransientAsync();
+
+                if (!response.IsSuccessful)
+                    throw new EventStoreConnectionException(
+                        String.Format("Cannot connect to {0} to get the projections list", _knownConnection),
+                        response.Status);
+            }
+            catch (EventStoreConnectionException ex)
+            {
+                Output.Pane.OutputStringThreadSafe(ex.Message);
+                throw;
+            }
 
             var projections = response.Result
                                       .Where(x => !String.IsNullOrWhiteSpace(x.Name))

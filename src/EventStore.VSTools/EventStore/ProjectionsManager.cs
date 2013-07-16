@@ -32,7 +32,7 @@ namespace EventStore.VSTools.EventStore
             var url = _baseAddress + "/projections/all-non-transient";
             var result = await _httpClient.GetAsync(url);
 
-            if (result.StatusCode != HttpStatusCode.OK)
+            if (result.InStatus(HttpStatusCode.OK))
                 throw new EventStoreConnectionException(
                     String.Format("Cannot connect to {0} to get the projections list", _baseAddress), result.StatusCode);
 
@@ -52,7 +52,10 @@ namespace EventStore.VSTools.EventStore
 
             var response = await _httpClient.GetAsync(locaionUri);
 
-            if (!response.HasStatus(HttpStatusCode.OK))
+            if (!response.InStatus(HttpStatusCode.OK, HttpStatusCode.NotFound))
+                RaiseCannotConnectToGetProjectionException(projectionName, response);
+
+            if (!response.InStatus(HttpStatusCode.OK))
                 return EventStoreResponse<ProjectionConfig>.Fail(response.StatusCode);
 
             var config = new ProjectionConfig(response.GetJsonContentAsDynamic());
@@ -65,7 +68,10 @@ namespace EventStore.VSTools.EventStore
             var locaionUri = _baseAddress + projectionLocation;
             var response = await _httpClient.GetAsync(locaionUri);
 
-            if (!response.HasStatus(HttpStatusCode.OK))
+            if (!response.InStatus(HttpStatusCode.OK, HttpStatusCode.NotFound))
+                RaiseCannotConnectToGetProjectionException(projectionName, response);
+
+            if (!response.InStatus(HttpStatusCode.OK))
                 return EventStoreResponse<ProjectionStatistics>.Fail(response.StatusCode);
 
             var stats = new ProjectionStatistics(response.GetJsonContentAsDynamic());
@@ -101,6 +107,16 @@ namespace EventStore.VSTools.EventStore
                     result.StatusCode);
 
             return result;
+        }
+
+        private static void RaiseCannotConnectToGetProjectionException(string projectionName, HttpResponse response)
+        {
+            if (!response.InStatus(HttpStatusCode.OK, HttpStatusCode.NotFound))
+                throw new EventStoreConnectionException(
+                    String.Format("Cannot get projection '{0}' from the EventStore: {1}",
+                                  projectionName,
+                                  response.StatusCode.ToString().Wordify()),
+                    response.StatusCode);
         }
     }
 
