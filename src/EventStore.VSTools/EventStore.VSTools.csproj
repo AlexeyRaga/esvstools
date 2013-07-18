@@ -70,6 +70,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="PresentationCore" />
@@ -139,6 +140,14 @@
     <Compile Include="Commands\IVsCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\ToolWindowCommand.cs" />
+    <Compile Include="CredentialsManager\Credentials.cs" />
+    <Compile Include="CredentialsManager\CredentialsEncryptor.cs" />
+    <Compile Include="CredentialsManager\CredentialsManager.cs" />
+    <Compile Include="CredentialsManager\CredentialsSerializer.cs" />
+    <Compile Include="CredentialsManager\ICredentialsManager.cs" />
+    <Compile Include="CredentialsManager\IEncryptCredentials.cs" />
+    <Compile Include="CredentialsManager\IStoreEncryptedCredentials.cs" />
+    <Compile Include="CredentialsManager\RegistryCredentialsStore.cs" />
     <Compile Include="EventStore\ErrorMessages.cs" />
     <Compile Include="EventStore\ProjectionConfig.cs" />
     <Compile Include="EventStore\ProjectionStatistics.cs" />
