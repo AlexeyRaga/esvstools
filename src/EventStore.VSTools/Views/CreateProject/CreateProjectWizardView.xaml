@@ -45,7 +45,7 @@
                     <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding Password}"></TextBox>
                     
                     <StackPanel HorizontalAlignment="Right" Grid.Row="6" Grid.Column="2">
-                        <Button Command="{Binding TestConnectionCommand}">Test connection</Button>
+                        <Button Width="100" Command="{Binding TestConnectionCommand}">Test connection</Button>
                     </StackPanel>
                 </Grid>
             </DataTemplate>

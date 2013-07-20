@@ -1,5 +1,6 @@
 ﻿using System;
 using EventStore.VSTools.EventStore;
+using EventStore.VSTools.Infrastructure;
 
 namespace EventStore.VSTools.Views.CreateProject
 {
@@ -53,8 +54,14 @@ namespace EventStore.VSTools.Views.CreateProject
 
             try
             {
-                await projectionsManager.TestConnectionAsync();
+                var tryCredentials = new VSTools.Credentials(_state.Username, _state.Password);
+
+                await projectionsManager.TestConnectionAsync(tryCredentials);
                 CanGoNext = true;
+            }
+            catch (UnauthorisedRequestException ex)
+            {
+                Output.Pane.OutputStringThreadSafe(String.Format("ERROR: " + ex.Message));
             }
             catch (EventStoreConnectionException ex)
             {

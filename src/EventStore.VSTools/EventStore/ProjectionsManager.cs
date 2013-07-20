@@ -11,7 +11,7 @@ namespace EventStore.VSTools.EventStore
         Task<EventStoreResponse<List<ProjectionStatistics>>> GetAllNonTransientAsync();
         Task<EventStoreResponse<ProjectionConfig>> GetConfigAsync(string projectionName);
         Task<EventStoreResponse<ProjectionStatistics>> GetStatisticsAsync(string projectionName);
-        Task TestConnectionAsync();
+        Task TestConnectionAsync(Credentials credentials);
 
         Task<HttpResponse> CreateProjectionAsync(string projectionName, string content, bool enable, bool enableCheckpoint, bool enableEmit);
         Task<HttpResponse> UpdateProjectionQueryAsync(string projectionName, string content);
@@ -46,11 +46,13 @@ namespace EventStore.VSTools.EventStore
             return await ExecuteWithCredentials(resource, ++attempt, numberOfAttempts, function);
         }
 
-        public async Task TestConnectionAsync()
+        public async Task TestConnectionAsync(Credentials credentials)
         {
             var url = _baseAddress + "/projections/all-non-transient";
-            var response =
-                await (ExecuteWithCredentials(_baseAddress, 0, 1, credentials => _httpClient.GetAsync(url)));
+            var response = await _httpClient.GetAsync(url);
+
+            if (!response.IsAuthorized())
+                RaiseUnauthorizedException(_baseAddress);
 
             if (!response.InStatus(HttpStatusCode.OK))
                 throw new EventStoreConnectionException(String.Format("Unable to connect: {0}. ({1} - {2})",
