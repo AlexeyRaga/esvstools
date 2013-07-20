@@ -1,21 +1,22 @@
-﻿using EventStore.VSTools.Infrastructure;
+﻿using System;
+using EventStore.VSTools.Infrastructure;
 
 namespace EventStore.VSTools.EventStore
 {
     public sealed class ProjectionDeploymentAgent : IConsume<DeployProjection>
     {
-        private readonly IProjectionsManagerFactory _projectionsManagerFactory;
+        private readonly Func<string, IProjectionsManager> BuildProjectionsManager;
         private readonly IPublish<IMessage> _publisher;
 
-        public ProjectionDeploymentAgent(IProjectionsManagerFactory projectionsManagerFactory , IPublish<IMessage> publisher)
+        public ProjectionDeploymentAgent(Func<string, IProjectionsManager> projectionsManagerFactory, IPublish<IMessage> publisher)
         {
-            _projectionsManagerFactory = projectionsManagerFactory;
+            BuildProjectionsManager = projectionsManagerFactory;
             _publisher = publisher;
         }
 
         public async void Consume(DeployProjection message)
         {
-            var projectionsManager = _projectionsManagerFactory.BuildProjectionsManager(message.EventStoreAddress);
+            var projectionsManager = BuildProjectionsManager(message.EventStoreAddress);
             var existingProjectionConfig = await projectionsManager.GetConfigAsync(message.Name);
 
             if (existingProjectionConfig.IsSuccessful)

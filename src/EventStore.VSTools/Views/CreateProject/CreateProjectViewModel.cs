@@ -40,7 +40,7 @@ namespace EventStore.VSTools.Views.CreateProject
             }
         }
 
-        public CreateProjectViewModel(IProjectionsManagerFactory projectionsManagerFactory)
+        public CreateProjectViewModel(Func<string, IProjectionsManager> projectionsManagerFactory)
         {
             State = new WizardState {EventStoreConnection = "localhost:2113"};
             AddPage(new StartPageViewModel(State));

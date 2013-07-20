@@ -71,7 +71,7 @@ namespace EventStore.VSTools
 
         private void SubscribeConsumers()
         {
-            var projectionsManagerFactory = new ProjectionsManagerFactory();
+            var projectionsManagerFactory = ConfigurationThatReplacesIoC.BuildProjectionsManager;
 
             _dispatcher.Subscribe(new ProjectionDeploymentAgent(projectionsManagerFactory, _dispatcher));
             _dispatcher.Subscribe(new DeploymentProcessOutputConsumer(new OutputMessageWriter()));

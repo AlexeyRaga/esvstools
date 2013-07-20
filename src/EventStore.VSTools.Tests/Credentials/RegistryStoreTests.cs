@@ -65,8 +65,16 @@ namespace EventStore.VSTools.Tests.Credentials
 
             var store2 = new RegistryCredentialsStore(ProductKey);
             var shouldNotExist = store2.Load(_key);
-
             shouldNotExist.ShouldBe(null);
+        }
+
+        [Test]
+        public void Should_delete_even_if_not_exist()
+        {
+            var store = new RegistryCredentialsStore(ProductKey);
+            var key = Guid.NewGuid().ToByteArray();
+
+            store.Delete(key);
         }
 
         [TearDown]

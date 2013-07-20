@@ -148,9 +148,9 @@
     <Compile Include="CredentialsManager\IEncryptCredentials.cs" />
     <Compile Include="CredentialsManager\IStoreEncryptedCredentials.cs" />
     <Compile Include="CredentialsManager\RegistryCredentialsStore.cs" />
+    <Compile Include="EventStore\ConfigurationThatReplacesIoC.cs" />
     <Compile Include="EventStore\ErrorMessages.cs" />
     <Compile Include="EventStore\ProjectionConfig.cs" />
-    <Compile Include="EventStore\ProjectionsManagerFactory.cs" />
     <Compile Include="EventStore\ProjectionStatistics.cs" />
     <Compile Include="ExceptionExtensions.cs" />
     <Compile Include="Infrastructure\ErrorMessageConsumer.cs" />

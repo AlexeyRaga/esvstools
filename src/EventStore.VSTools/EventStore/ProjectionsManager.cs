@@ -19,6 +19,7 @@ namespace EventStore.VSTools.EventStore
 
     public sealed class ProjectionsManager : IProjectionsManager
     {
+        private readonly string _resource;
         private readonly string _baseAddress;
         private readonly IProvideCredentials _credentialsProvider;
         private readonly IHttpClient _httpClient;
@@ -26,24 +27,26 @@ namespace EventStore.VSTools.EventStore
 
         public ProjectionsManager(string eventStoreAddress, IProvideCredentials credentialsProvider, IHttpClient httpClient)
         {
+            _resource = eventStoreAddress;
             _baseAddress = EventStoreAddress.Get(eventStoreAddress);
             _credentialsProvider = credentialsProvider;
             _httpClient = httpClient;
         }
 
-        private async Task<HttpResponse> ExecuteWithCredentials(string resource, int attempt, int numberOfAttempts,
-                                                                Func<Credentials, Task<HttpResponse>> function)
+        private async Task<HttpResponse> ExecuteWithCredentials(
+            int attempt, int numberOfAttempts,
+            Func<Credentials, Task<HttpResponse>> function)
         {
-            var credentials = _credentialsProvider.GetFor(resource, attempt == 0);
-            if (credentials == null) RaiseUnauthorizedException(resource);
+            var credentials = _credentialsProvider.GetFor(_resource, attempt == 0);
+            if (credentials == null) RaiseUnauthorizedException(_resource);
 
             var result = await function(credentials);
             if (result.IsAuthorized()) return result;
 
-            if (attempt >= numberOfAttempts-1)
-                RaiseUnauthorizedException(resource);
+            if (attempt >= numberOfAttempts - 1)
+                RaiseUnauthorizedException(_resource);
 
-            return await ExecuteWithCredentials(resource, ++attempt, numberOfAttempts, function);
+            return await ExecuteWithCredentials(++attempt, numberOfAttempts, function);
         }
 
         public async Task TestConnectionAsync(Credentials credentials)
@@ -61,17 +64,16 @@ namespace EventStore.VSTools.EventStore
                                                         response.StatusCode);
         }
 
-        private async Task<HttpResponse> ExecuteWithCredentials(string resource,
-                                                                Func<Credentials, Task<HttpResponse>> function)
+        private async Task<HttpResponse> ExecuteWithCredentials(Func<Credentials, Task<HttpResponse>> function)
         {
-            return await ExecuteWithCredentials(resource, 0, MaxAttempts, function);
+            return await ExecuteWithCredentials(0, MaxAttempts, function);
         }
 
         public async Task<EventStoreResponse<List<ProjectionStatistics>>> GetAllNonTransientAsync()
         {
             var url = _baseAddress + "/projections/all-non-transient";
 
-            var response = await (ExecuteWithCredentials(_baseAddress, credentials => _httpClient.GetAsync(url)));
+            var response = await (ExecuteWithCredentials(credentials => _httpClient.GetAsync(url)));
 
             if (response.InStatus(HttpStatusCode.OK))
                 throw new EventStoreConnectionException(
@@ -91,7 +93,7 @@ namespace EventStore.VSTools.EventStore
             var projectionLocation = "/projection/" + projectionName + "/query?config=yes";
             var locaionUri = _baseAddress + projectionLocation;
 
-            var response = await (ExecuteWithCredentials(_baseAddress, credentials => _httpClient.GetAsync(locaionUri)));
+            var response = await (ExecuteWithCredentials(credentials => _httpClient.GetAsync(locaionUri)));
 
             if (!response.InStatus(HttpStatusCode.OK, HttpStatusCode.NotFound))
                 RaiseCannotConnectToGetProjectionException(projectionName, response);
@@ -108,7 +110,7 @@ namespace EventStore.VSTools.EventStore
             var projectionLocation = "/projection/" + projectionName + "/statistics";
             var locaionUri = _baseAddress + projectionLocation;
 
-            var response = await (ExecuteWithCredentials(_baseAddress, credentials => _httpClient.GetAsync(locaionUri)));
+            var response = await (ExecuteWithCredentials(credentials => _httpClient.GetAsync(locaionUri)));
 
             if (!response.InStatus(HttpStatusCode.OK, HttpStatusCode.NotFound))
                 RaiseCannotConnectToGetProjectionException(projectionName, response);
@@ -125,7 +127,7 @@ namespace EventStore.VSTools.EventStore
             var projectionLocation = "/projection/" + projectionName + "/query?type=JS";
             var locationUri = _baseAddress + projectionLocation;
 
-            var response = await (ExecuteWithCredentials(_baseAddress, credentials => _httpClient.PutAsync(locationUri, query)));
+            var response = await (ExecuteWithCredentials(credentials => _httpClient.PutAsync(locationUri, query)));
 
             if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.Accepted)
                 throw new EventStoreConnectionException(
@@ -142,7 +144,7 @@ namespace EventStore.VSTools.EventStore
 
             var locationUri = _baseAddress + projectionLocation;
 
-            var response = await (ExecuteWithCredentials(_baseAddress, credentials => _httpClient.PutAsync(locationUri, content)));
+            var response = await (ExecuteWithCredentials(credentials => _httpClient.PutAsync(locationUri, content)));
 
             if (response.StatusCode != HttpStatusCode.Accepted && response.StatusCode != HttpStatusCode.Created && response.StatusCode != HttpStatusCode.OK)
                 throw new EventStoreConnectionException(

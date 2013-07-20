@@ -7,14 +7,14 @@ namespace EventStore.VSTools.Views.CreateProject
     public sealed class EventStoreConnectionPageViewModel : PageViewModel
     {
         private readonly WizardState _state;
-        private readonly IProjectionsManagerFactory _projectionsManagerFactory;
+        private readonly Func<string, IProjectionsManager> BuildProjectionsManager;
 
         public System.Windows.Input.ICommand TestConnectionCommand { get; private set; }
 
-        public EventStoreConnectionPageViewModel(WizardState state, IProjectionsManagerFactory projectionsManagerFactory)
+        public EventStoreConnectionPageViewModel(WizardState state, Func<string, IProjectionsManager> projectionsManagerFactory)
         {
             _state = state;
-            _projectionsManagerFactory = projectionsManagerFactory;
+            BuildProjectionsManager = projectionsManagerFactory;
             CanGoNext = false;
 
            TestConnectionCommand  = new DelegateCommand(_ => TestConnection());
@@ -50,7 +50,7 @@ namespace EventStore.VSTools.Views.CreateProject
 
         private async void RunConnectionTestAsync()
         {
-            var projectionsManager = _projectionsManagerFactory.BuildProjectionsManager(_state.EventStoreConnection);
+            var projectionsManager = BuildProjectionsManager(_state.EventStoreConnection);
 
             try
             {

@@ -49,7 +49,10 @@ namespace EventStore.VSTools.CredentialsManager
                 {
                     if (container == null) return;
 
-                    container.DeleteValue(stringKey);
+                    if (container.GetValue(stringKey, null) != null)
+                    {
+                        container.DeleteValue(stringKey);
+                    }
                 }
             }
         }
