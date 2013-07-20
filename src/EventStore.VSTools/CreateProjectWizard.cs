@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using EventStore.VSTools.CredentialsManager;
 using EventStore.VSTools.EventStore;
 using EventStore.VSTools.Infrastructure;
 using EventStore.VSTools.Views.CreateProject;
+using EventStore.VSTools.Views.Credentials;
 using Microsoft.VisualStudio.TemplateWizard;
 
 namespace EventStore.VSTools
 {
     public sealed class CreateProjectWizard : IWizard
     {
+        private readonly IProjectionsManagerFactory _projectionsManagerFactory = new ProjectionsManagerFactory();
         public void BeforeOpeningFile(EnvDTE.ProjectItem projectItem)
         {
             
@@ -19,7 +22,7 @@ namespace EventStore.VSTools
 
         public void ProjectFinishedGenerating(EnvDTE.Project project)
         {
-            var viewModel = new CreateProjectViewModel(BuildProjectionManager);
+            var viewModel = new CreateProjectViewModel(_projectionsManagerFactory);
             var view = new CreateProjectWizardView(viewModel);
             if (!view.ShowDialog().GetValueOrDefault(false)) return;
 
@@ -27,17 +30,11 @@ namespace EventStore.VSTools
 
             if (viewModel.State.ProjectionsToImport.Any())
             {
-                var projectionsManager = BuildProjectionManager(viewModel.State.EventStoreConnection);
+                var projectionsManager = _projectionsManagerFactory.BuildProjectionsManager(viewModel.State.EventStoreConnection);
                 AsyncHelpers.RunSync(() => ImportProjectionsAsync(projectNode, projectionsManager, viewModel.State.ProjectionsToImport));
             }
 
             project.Save();
-        }
-
-
-        private IProjectionsManager BuildProjectionManager(string connection)
-        {
-            return new ProjectionsManager(connection, new SimpleHttpClient());
         }
 
         private static async Task ImportProjectionsAsync(ProjectionsProjectNode project, IProjectionsManager projectionsManager, IList<ProjectionStatistics> projections)

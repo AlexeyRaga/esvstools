@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.ComponentModel.Design;
 using EventStore.VSTools.Commands;
@@ -72,9 +71,9 @@ namespace EventStore.VSTools
 
         private void SubscribeConsumers()
         {
-            Func<string, IProjectionsManager> projectionsManagerBuilder = address => new ProjectionsManager(address, new SimpleHttpClient());
+            var projectionsManagerFactory = new ProjectionsManagerFactory();
 
-            _dispatcher.Subscribe(new ProjectionDeploymentAgent(projectionsManagerBuilder, _dispatcher));
+            _dispatcher.Subscribe(new ProjectionDeploymentAgent(projectionsManagerFactory, _dispatcher));
             _dispatcher.Subscribe(new DeploymentProcessOutputConsumer(new OutputMessageWriter()));
             _dispatcher.Subscribe(new ProjectionRunner(_dispatcher));
             _dispatcher.Subscribe(new QueryViewConsumer(this));

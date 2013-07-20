@@ -11,7 +11,7 @@ namespace EventStore.VSTools.Tests.Credentials
         [Test]
         public void Should_serialize_and_deserialize_credentials()
         {
-            var credentials = new CredentialsManager.Credentials(Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
+            var credentials = new VSTools.Credentials(Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
 
             var serialized = CredentialsSerializer.Serialize(credentials);
             var deserialized = CredentialsSerializer.Deserialize(serialized);

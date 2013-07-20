@@ -27,12 +27,26 @@
                     <Grid.RowDefinitions>
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
+                        <RowDefinition Height="20"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition Height="20"></RowDefinition>
+                        <RowDefinition></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
                     </Grid.RowDefinitions>
                     <Label Grid.Column="0" Grid.Row="0" >EventStore Connection:</Label>
                     <TextBox Grid.Column="2" Grid.Row="0" Text="{Binding ConnectionString}"></TextBox>
-
                     <TextBlock Grid.Row="1" Grid.Column="2" Opacity="0.5">Example: localhost:2113</TextBlock>
+
+                    <Label Grid.Row="3" Grid.Column="0">Username:</Label>
+                    <TextBox Grid.Row="3" Grid.Column="2" Text="{Binding Username}"></TextBox>
+
+                    <Label Grid.Row="4" Grid.Column="0">Password:</Label>
+                    <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding Password}"></TextBox>
+                    
+                    <StackPanel HorizontalAlignment="Right" Grid.Row="6" Grid.Column="2">
+                        <Button Command="{Binding TestConnectionCommand}">Test connection</Button>
+                    </StackPanel>
                 </Grid>
             </DataTemplate>
             <DataTemplate DataType="{x:Type wiz:ImportProjectionsPageViewModel}">

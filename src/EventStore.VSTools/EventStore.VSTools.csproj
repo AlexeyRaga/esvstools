@@ -140,7 +140,7 @@
     <Compile Include="Commands\IVsCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\ToolWindowCommand.cs" />
-    <Compile Include="CredentialsManager\Credentials.cs" />
+    <Compile Include="Common\Credentials.cs" />
     <Compile Include="CredentialsManager\CredentialsEncryptor.cs" />
     <Compile Include="CredentialsManager\CredentialsManager.cs" />
     <Compile Include="CredentialsManager\CredentialsSerializer.cs" />
@@ -150,11 +150,14 @@
     <Compile Include="CredentialsManager\RegistryCredentialsStore.cs" />
     <Compile Include="EventStore\ErrorMessages.cs" />
     <Compile Include="EventStore\ProjectionConfig.cs" />
+    <Compile Include="EventStore\ProjectionsManagerFactory.cs" />
     <Compile Include="EventStore\ProjectionStatistics.cs" />
     <Compile Include="ExceptionExtensions.cs" />
     <Compile Include="Infrastructure\ErrorMessageConsumer.cs" />
     <Compile Include="Infrastructure\IOutputErrorMessages.cs" />
     <Compile Include="Infrastructure\ErrorMessageWriter.cs" />
+    <Compile Include="Infrastructure\IProvideCredentials.cs" />
+    <Compile Include="Infrastructure\UnauthorisedRequestException.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="Views\Constants.cs" />
     <Compile Include="EnumerableExtensions.cs" />
@@ -165,6 +168,7 @@
     <Compile Include="Views\CreateProject\CreateProjectWizardView.xaml.cs">
       <DependentUpon>CreateProjectWizardView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DelegateCommand.cs" />
     <Compile Include="Views\CreateProject\EventStoreConnectionPageViewModel.cs" />
     <Compile Include="Views\CreateProject\FinishPageViewModel.cs" />
     <Compile Include="Views\CreateProject\ImportProjectionsPageViewModel.cs" />
@@ -212,12 +216,16 @@
     <Compile Include="PkgCmdID.cs" />
     <Compile Include="Views\CreateProject\StartPageViewModel.cs" />
     <Compile Include="Views\CreateProject\WizardState.cs" />
+    <Compile Include="Views\Credentials\CredentialPromptService.cs" />
+    <Compile Include="Views\Credentials\CredentialsPrompt.xaml.cs">
+      <DependentUpon>CredentialsPrompt.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Credentials\CredentialsPromptViewModel.cs" />
     <Compile Include="Views\QueryTool\QueryToolWindowViewModel.cs" />
     <Compile Include="Views\QueryTool\QueryViewModel.cs" />
     <Compile Include="Views\QueryTool\QueryViewToolWindow.xaml.cs">
       <DependentUpon>QueryViewToolWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DelegateCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
@@ -277,6 +285,10 @@
   <ItemGroup />
   <ItemGroup>
     <Page Include="Views\CreateProject\CreateProjectWizardView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Credentials\CredentialsPrompt.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
