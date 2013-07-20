@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using EventStore.VSTools.CredentialsManager;
 using EventStore.VSTools.EventStore;
 using EventStore.VSTools.Infrastructure;
 using EventStore.VSTools.Views.CreateProject;
-using EventStore.VSTools.Views.Credentials;
 using Microsoft.VisualStudio.TemplateWizard;
 
 namespace EventStore.VSTools
