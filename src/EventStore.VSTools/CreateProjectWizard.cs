@@ -32,6 +32,8 @@ namespace EventStore.VSTools
             }
 
             project.Save();
+            projectNode.CurrentConfig.SetProperty(Constants.EventStore.ConnectionString, viewModel.State.EventStoreConnection);
+            project.Save();
         }
 
 
