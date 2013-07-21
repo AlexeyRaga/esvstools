@@ -35,6 +35,8 @@ namespace EventStore.VSTools
             }
 
             project.Save();
+            projectNode.CurrentConfig.SetProperty(Constants.EventStore.ConnectionString, viewModel.State.EventStoreConnection);
+            project.Save();
         }
 
         private static void StoreCredentials(string resource, string username, string password)
