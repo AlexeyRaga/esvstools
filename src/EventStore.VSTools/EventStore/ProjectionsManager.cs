@@ -32,7 +32,7 @@ namespace EventStore.VSTools.EventStore
             var url = _baseAddress + "/projections/all-non-transient";
             var result = await _httpClient.GetAsync(url);
 
-            if (result.InStatus(HttpStatusCode.OK))
+            if (!result.InStatus(HttpStatusCode.OK))
                 throw new EventStoreConnectionException(
                     String.Format("Cannot connect to {0} to get the projections list", _baseAddress), result.StatusCode);
 

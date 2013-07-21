@@ -17,7 +17,7 @@
                 <TextBlock Text="{Binding WelcomeNote}" TextWrapping="WrapWithOverflow"></TextBlock>
             </DataTemplate>
             <DataTemplate DataType="{x:Type wiz:EventStoreConnectionPageViewModel}">
-                <Grid>
+                <Grid VerticalAlignment="Stretch">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="160"></ColumnDefinition>
                         <ColumnDefinition Width="10"></ColumnDefinition>
@@ -36,7 +36,7 @@
                 </Grid>
             </DataTemplate>
             <DataTemplate DataType="{x:Type wiz:ImportProjectionsPageViewModel}">
-                <Grid>
+                <Grid VerticalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="20"></RowDefinition>
@@ -77,7 +77,7 @@
                 </Grid>
             </DataTemplate>
             <DataTemplate DataType="{x:Type wiz:FinishPageViewModel}">
-                <Grid>
+                <Grid VerticalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="20"></RowDefinition>
@@ -122,9 +122,7 @@
                        Foreground="{DynamicResource VsBrush.ToolWindowText}" Margin="10" Grid.Column="1">
             </TextBlock>
         </Grid>
-        <StackPanel Grid.Row="1" VerticalAlignment="Stretch" Margin="10,20,10,10">
-            <ScrollContentPresenter Content="{Binding ActivePage}"></ScrollContentPresenter>
-        </StackPanel>
+        <UserControl x:Name="ContentPlaceholder" Grid.Row="1" Margin="10,20,10,10" VerticalAlignment="Stretch" Content="{Binding ActivePage}"/>
         <Border Grid.Row="2" Background="Transparent" BorderThickness="0,1,0,0"
                 BorderBrush="{DynamicResource VsBrush.CommandBarMenuBorder}">
         <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" Orientation="Horizontal" Margin="10,0,5,5">
