@@ -12,12 +12,11 @@
                 <ResourceDictionary Source="../ThemedControls.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
 
-
             <DataTemplate DataType="{x:Type wiz:StartPageViewModel}">
                 <TextBlock Text="{Binding WelcomeNote}" TextWrapping="WrapWithOverflow"></TextBlock>
             </DataTemplate>
             <DataTemplate DataType="{x:Type wiz:EventStoreConnectionPageViewModel}">
-                <Grid VerticalAlignment="Stretch">
+                <Grid VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="160"></ColumnDefinition>
                         <ColumnDefinition Width="10"></ColumnDefinition>
@@ -87,18 +86,20 @@
                         <Label>EventStore connection:</Label>
                         <Label FontWeight="Bold" Content="{Binding State.EventStoreConnection}"></Label>
                     </StackPanel>
-                    <ItemsControl Grid.Row="2" ItemsSource="{Binding State.ProjectionsToImport}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Name}"></TextBlock>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical"></StackPanel>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
+                    <ScrollViewer Grid.Row="2" VerticalAlignment="Stretch">
+                        <ItemsControl Grid.Row="2" ItemsSource="{Binding State.ProjectionsToImport}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}"></TextBlock>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical"></StackPanel>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </ScrollViewer>
                 </Grid>
             </DataTemplate>
         </ResourceDictionary>
