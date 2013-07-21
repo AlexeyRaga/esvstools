@@ -75,7 +75,7 @@ namespace EventStore.VSTools.EventStore
 
             var response = await (ExecuteWithCredentials(credentials => _httpClient.GetAsync(url)));
 
-            if (!result.InStatus(HttpStatusCode.OK))
+            if (!response.InStatus(HttpStatusCode.OK))
                 throw new EventStoreConnectionException(
                     String.Format("Cannot connect to {0} to get the projections list", _baseAddress), response.StatusCode);
 
