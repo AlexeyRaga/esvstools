@@ -35,7 +35,7 @@ namespace EventStore.VSTools.Views.CreateProject
                 _activePage = value;
                 if (_activePage != null) _activePage.Activate();
 
-                _knownCommands.ForEach(x => x.UpdateStatus());
+                UpdateCommandsStatus();
                 OnPropertyChanged("ActivePage");
             }
         }
@@ -43,17 +43,23 @@ namespace EventStore.VSTools.Views.CreateProject
         public CreateProjectViewModel(Func<string, IProjectionsManager> projectionsManagerFactory)
         {
             State = new WizardState {EventStoreConnection = "localhost:2113"};
-            _pages.Add(new StartPageViewModel(State));
-            _pages.Add(new EventStoreConnectionPageViewModel(State));
-            _pages.Add(new ImportProjectionsPageViewModel(State, projectionsManagerFactory));
-            _pages.Add(new FinishPageViewModel(State));
+            AddPage(new StartPageViewModel(State));
+            AddPage(new EventStoreConnectionPageViewModel(State, projectionsManagerFactory));
+            AddPage(new ImportProjectionsPageViewModel(State, projectionsManagerFactory));
+            AddPage(new FinishPageViewModel(State));
 
-            NextCommand     = BuildCommand(_ => ActivePage != _pages.Last(), _ => OnNext());
-            PrevCommand     = BuildCommand(_ => ActivePage != _pages.First(), _ => OnPrev());
-            FinishCommand   = BuildCommand(_ => ActivePage == _pages.Last(), _ => OnFinish());
+            NextCommand     = BuildCommand(_ => ActivePage != _pages.Last() && ActivePage.CanGoNext, _ => OnNext());
+            PrevCommand     = BuildCommand(_ => ActivePage != _pages.First() && ActivePage.CanGoBack, _ => OnPrev());
+            FinishCommand   = BuildCommand(_ => ActivePage == _pages.Last() && ActivePage.CanGoNext, _ => OnFinish());
             CancelCommand   = BuildCommand(_ => true, _ => OnCancel());
 
             ActivePage = _pages.First();
+        }
+
+        private void AddPage(PageViewModel page)
+        {
+            page.PageStateChanded += (sender, args) => UpdateCommandsStatus();
+            _pages.Add(page);
         }
 
         private DelegateCommand BuildCommand(Func<object, bool> canExecute, Action<object> execute)
@@ -61,6 +67,11 @@ namespace EventStore.VSTools.Views.CreateProject
             var command = new DelegateCommand(canExecute, execute);
             _knownCommands.Add(command);
             return command;
+        }
+
+        private void UpdateCommandsStatus()
+        {
+            _knownCommands.ForEach(x => x.UpdateStatus());
         }
 
         private void OnCancel()

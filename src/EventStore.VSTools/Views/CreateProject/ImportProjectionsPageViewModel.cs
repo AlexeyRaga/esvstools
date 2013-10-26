@@ -10,14 +10,14 @@ namespace EventStore.VSTools.Views.CreateProject
     {
         private string _knownConnection;
         private readonly WizardState _state;
-        private readonly Func<string, IProjectionsManager> _projectionsManagerFactory;
+        private readonly Func<string, IProjectionsManager> BuildProjectionsManager;
 
         public ObservableCollection<ImportProjectionInfo> ExistingProjections { get; private set; }
 
         public ImportProjectionsPageViewModel(WizardState state, Func<string, IProjectionsManager> projectionsManagerFactory)
         {
             _state = state;
-            _projectionsManagerFactory = projectionsManagerFactory;
+            BuildProjectionsManager = projectionsManagerFactory;
 
             ExistingProjections = new ObservableCollection<ImportProjectionInfo>();
         }
@@ -44,7 +44,7 @@ namespace EventStore.VSTools.Views.CreateProject
 
         private async void GetProjectionsListFromEventStoreAsync()
         {
-            var manager = _projectionsManagerFactory(_state.EventStoreConnection);
+            var manager = BuildProjectionsManager(_state.EventStoreConnection);
 
             EventStoreResponse<List<ProjectionStatistics>> response;
             try

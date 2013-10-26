@@ -1,8 +1,5 @@
-﻿using System.Threading.Tasks;
-using EventStore.VSTools;
+﻿using System;
 using EventStore.VSTools.Infrastructure;
-using System;
-using System.Net;
 
 namespace EventStore.VSTools.EventStore
 {
@@ -11,9 +8,9 @@ namespace EventStore.VSTools.EventStore
         private readonly Func<string, IProjectionsManager> BuildProjectionsManager;
         private readonly IPublish<IMessage> _publisher;
 
-        public ProjectionDeploymentAgent(Func<string, IProjectionsManager> howToBuildProjectionsManager , IPublish<IMessage> publisher)
+        public ProjectionDeploymentAgent(Func<string, IProjectionsManager> projectionsManagerFactory, IPublish<IMessage> publisher)
         {
-            BuildProjectionsManager = howToBuildProjectionsManager;
+            BuildProjectionsManager = projectionsManagerFactory;
             _publisher = publisher;
         }
 

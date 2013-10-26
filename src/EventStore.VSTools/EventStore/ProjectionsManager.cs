@@ -11,6 +11,7 @@ namespace EventStore.VSTools.EventStore
         Task<EventStoreResponse<List<ProjectionStatistics>>> GetAllNonTransientAsync();
         Task<EventStoreResponse<ProjectionConfig>> GetConfigAsync(string projectionName);
         Task<EventStoreResponse<ProjectionStatistics>> GetStatisticsAsync(string projectionName);
+        Task TestConnectionAsync(Credentials credentials);
 
         Task<HttpResponse> CreateProjectionAsync(string projectionName, string content, bool enable, bool enableCheckpoint, bool enableEmit);
         Task<HttpResponse> UpdateProjectionQueryAsync(string projectionName, string content);
@@ -18,31 +19,73 @@ namespace EventStore.VSTools.EventStore
 
     public sealed class ProjectionsManager : IProjectionsManager
     {
+        private readonly string _resource;
         private readonly string _baseAddress;
+        private readonly IProvideCredentials _credentialsProvider;
         private readonly IHttpClient _httpClient;
+        private const int MaxAttempts = 3;
 
-        public ProjectionsManager(string eventStoreConnectionString, IHttpClient httpClient)
+        public ProjectionsManager(string eventStoreAddress, IProvideCredentials credentialsProvider, IHttpClient httpClient)
         {
-            _baseAddress = EventStoreAddress.Get(eventStoreConnectionString);
+            _resource = eventStoreAddress;
+            _baseAddress = EventStoreAddress.Get(eventStoreAddress);
+            _credentialsProvider = credentialsProvider;
             _httpClient = httpClient;
+        }
+
+        private async Task<HttpResponse> ExecuteWithCredentials(
+            int attempt, int numberOfAttempts,
+            Func<Credentials, Task<HttpResponse>> function)
+        {
+            var credentials = _credentialsProvider.GetFor(_resource, attempt == 0);
+            if (credentials == null) RaiseUnauthorizedException(_resource);
+
+            var result = await function(credentials);
+            if (result.IsAuthorized()) return result;
+
+            if (attempt >= numberOfAttempts - 1)
+                RaiseUnauthorizedException(_resource);
+
+            return await ExecuteWithCredentials(++attempt, numberOfAttempts, function);
+        }
+
+        public async Task TestConnectionAsync(Credentials credentials)
+        {
+            var url = _baseAddress + "/projections/all-non-transient";
+            var response = await _httpClient.GetAsync(url);
+
+            if (!response.IsAuthorized())
+                RaiseUnauthorizedException(_baseAddress);
+
+            if (!response.InStatus(HttpStatusCode.OK))
+                throw new EventStoreConnectionException(String.Format("Unable to connect: {0}. ({1} - {2})",
+                                                                      response.Content, (int) response.StatusCode,
+                                                                      response.StatusCode.ToString().Wordify()),
+                                                        response.StatusCode);
+        }
+
+        private async Task<HttpResponse> ExecuteWithCredentials(Func<Credentials, Task<HttpResponse>> function)
+        {
+            return await ExecuteWithCredentials(0, MaxAttempts, function);
         }
 
         public async Task<EventStoreResponse<List<ProjectionStatistics>>> GetAllNonTransientAsync()
         {
             var url = _baseAddress + "/projections/all-non-transient";
-            var result = await _httpClient.GetAsync(url);
 
-            if (!result.InStatus(HttpStatusCode.OK))
+            var response = await (ExecuteWithCredentials(credentials => _httpClient.GetAsync(url)));
+
+            if (!response.InStatus(HttpStatusCode.OK))
                 throw new EventStoreConnectionException(
-                    String.Format("Cannot connect to {0} to get the projections list", _baseAddress), result.StatusCode);
+                    String.Format("Cannot connect to {0} to get the projections list", _baseAddress), response.StatusCode);
 
-            var jsonContent = result.GetJsonContentAsDynamic();
+            var jsonContent = response.GetJsonContentAsDynamic();
 
             var statsList = new List<ProjectionStatistics>();
             foreach (var projInfo in jsonContent.projections)
                 statsList.Add(new ProjectionStatistics(projInfo));
 
-            return EventStoreResponse<List<ProjectionStatistics>>.Success(result.StatusCode, statsList);
+            return EventStoreResponse<List<ProjectionStatistics>>.Success(response.StatusCode, statsList);
         }
 
         public async Task<EventStoreResponse<ProjectionConfig>> GetConfigAsync(string projectionName)
@@ -50,7 +93,7 @@ namespace EventStore.VSTools.EventStore
             var projectionLocation = "/projection/" + projectionName + "/query?config=yes";
             var locaionUri = _baseAddress + projectionLocation;
 
-            var response = await _httpClient.GetAsync(locaionUri);
+            var response = await (ExecuteWithCredentials(credentials => _httpClient.GetAsync(locaionUri)));
 
             if (!response.InStatus(HttpStatusCode.OK, HttpStatusCode.NotFound))
                 RaiseCannotConnectToGetProjectionException(projectionName, response);
@@ -66,7 +109,8 @@ namespace EventStore.VSTools.EventStore
         {
             var projectionLocation = "/projection/" + projectionName + "/statistics";
             var locaionUri = _baseAddress + projectionLocation;
-            var response = await _httpClient.GetAsync(locaionUri);
+
+            var response = await (ExecuteWithCredentials(credentials => _httpClient.GetAsync(locaionUri)));
 
             if (!response.InStatus(HttpStatusCode.OK, HttpStatusCode.NotFound))
                 RaiseCannotConnectToGetProjectionException(projectionName, response);
@@ -83,13 +127,14 @@ namespace EventStore.VSTools.EventStore
             var projectionLocation = "/projection/" + projectionName + "/query?type=JS";
             var locationUri = _baseAddress + projectionLocation;
 
-            var result = await _httpClient.PutAsync(locationUri, query);
-            if (result.StatusCode != HttpStatusCode.OK && result.StatusCode != HttpStatusCode.Accepted)
-                throw new EventStoreConnectionException(
-                    String.Format("Unable to create projection {0}, the response was: {1}", projectionName, result.StatusCode),
-                    result.StatusCode);
+            var response = await (ExecuteWithCredentials(credentials => _httpClient.PutAsync(locationUri, query)));
 
-            return result;
+            if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.Accepted)
+                throw new EventStoreConnectionException(
+                    String.Format("Unable to create projection {0}, the response was: {1}", projectionName, response.StatusCode),
+                    response.StatusCode);
+
+            return response;
         }
 
         public async Task<HttpResponse> CreateProjectionAsync(string projectionName, string content, bool enable, bool enableCheckpoint, bool enableEmit)
@@ -97,16 +142,16 @@ namespace EventStore.VSTools.EventStore
             var projectionLocation = String.Format("/projections/continuous?name={0}&type=JS&emit={1}&checkpoints={2}&enabled={3}",
                 projectionName, enableEmit, enableCheckpoint, enable);
 
-            var projectionUri = _baseAddress + projectionLocation;
+            var locationUri = _baseAddress + projectionLocation;
 
-            var result = await _httpClient.PostAsync(projectionUri, content);
+            var response = await (ExecuteWithCredentials(credentials => _httpClient.PutAsync(locationUri, content)));
 
-            if (result.StatusCode != HttpStatusCode.Accepted && result.StatusCode != HttpStatusCode.Created && result.StatusCode != HttpStatusCode.OK)
+            if (response.StatusCode != HttpStatusCode.Accepted && response.StatusCode != HttpStatusCode.Created && response.StatusCode != HttpStatusCode.OK)
                 throw new EventStoreConnectionException(
-                    String.Format("Unable to create projection {0}, the response was: {1}", projectionName, result.StatusCode),
-                    result.StatusCode);
+                    String.Format("Unable to create projection {0}, the response was: {1}", projectionName, response.StatusCode),
+                    response.StatusCode);
 
-            return result;
+            return response;
         }
 
         private static void RaiseCannotConnectToGetProjectionException(string projectionName, HttpResponse response)
@@ -117,6 +162,13 @@ namespace EventStore.VSTools.EventStore
                                   projectionName,
                                   response.StatusCode.ToString().Wordify()),
                     response.StatusCode);
+        }
+
+        private static void RaiseUnauthorizedException(string resourceName)
+        {
+            throw new UnauthorisedRequestException(
+                String.Format("{0}: {1} - {2}", resourceName, (int) HttpStatusCode.Unauthorized,
+                              HttpStatusCode.Unauthorized.ToString().Wordify()));
         }
     }
 

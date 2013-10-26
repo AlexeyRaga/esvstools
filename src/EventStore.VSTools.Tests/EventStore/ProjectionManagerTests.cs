@@ -20,7 +20,9 @@ namespace EventStore.VSTools.Tests.EventStore
             var projectionContent = Guid.NewGuid().ToString();
 
             var httpClient = new FakeHttpClient(u => new HttpResponse(HttpStatusCode.OK, String.Empty, String.Empty), null, null);
-            var manager = new ProjectionsManager(EventStoreAddress, httpClient);
+
+            var credentialsProvider = new FakeCredentialsService();
+            var manager = new ProjectionsManager(EventStoreAddress, credentialsProvider, httpClient);
 
             var counter = new CountdownEvent(1);
             httpClient.SetCounter(counter);
@@ -43,7 +45,8 @@ namespace EventStore.VSTools.Tests.EventStore
             var projectionContent = Guid.NewGuid().ToString();
 
             var httpClient = new FakeHttpClient(u => new HttpResponse(HttpStatusCode.OK, String.Empty, String.Empty), null, null);
-            var manager = new ProjectionsManager(EventStoreAddress, httpClient);
+            var credentialsProvider = new FakeCredentialsService();
+            var manager = new ProjectionsManager(EventStoreAddress, credentialsProvider, httpClient);
 
             var counter = new CountdownEvent(1);
             httpClient.SetCounter(counter);
@@ -71,7 +74,8 @@ namespace EventStore.VSTools.Tests.EventStore
             var counter = new CountdownEvent(1);
             httpClient.SetCounter(counter);
 
-            var manager = new ProjectionsManager(EventStoreAddress, httpClient);
+            var credentialsProvider = new FakeCredentialsService();
+            var manager = new ProjectionsManager(EventStoreAddress, credentialsProvider, httpClient);
 
             manager.GetConfigAsync(projectionName);
 

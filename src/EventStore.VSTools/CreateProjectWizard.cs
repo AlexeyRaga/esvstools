@@ -19,15 +19,18 @@ namespace EventStore.VSTools
 
         public void ProjectFinishedGenerating(EnvDTE.Project project)
         {
-            var viewModel = new CreateProjectViewModel(BuildProjectionManager);
+            var viewModel = new CreateProjectViewModel(ConfigurationThatReplacesIoC.BuildProjectionsManager);
+
             var view = new CreateProjectWizardView(viewModel);
             if (!view.ShowDialog().GetValueOrDefault(false)) return;
 
             var projectNode = (ProjectionsProjectNode) project.Object;
 
+            StoreCredentials(viewModel.State.EventStoreConnection, viewModel.State.Username, viewModel.State.Password);
+
             if (viewModel.State.ProjectionsToImport.Any())
             {
-                var projectionsManager = BuildProjectionManager(viewModel.State.EventStoreConnection);
+                var projectionsManager = ConfigurationThatReplacesIoC.BuildProjectionsManager(viewModel.State.EventStoreConnection);
                 AsyncHelpers.RunSync(() => ImportProjectionsAsync(projectNode, projectionsManager, viewModel.State.ProjectionsToImport));
             }
 
@@ -36,10 +39,12 @@ namespace EventStore.VSTools
             project.Save();
         }
 
-
-        private IProjectionsManager BuildProjectionManager(string connection)
+        private static void StoreCredentials(string resource, string username, string password)
         {
-            return new ProjectionsManager(connection, new SimpleHttpClient());
+            var credentials = new Credentials(username, password);
+            var credentialsManager = ConfigurationThatReplacesIoC.BuildCredentialsManager();
+
+            credentialsManager.Put(resource, credentials);
         }
 
         private static async Task ImportProjectionsAsync(ProjectionsProjectNode project, IProjectionsManager projectionsManager, IList<ProjectionStatistics> projections)

@@ -11,10 +11,6 @@ namespace EventStore.VSTools.Infrastructure
 {
     public interface IHttpClient
     {
-        HttpResponse Get(string url);
-        HttpResponse Post(string url, string data);
-        HttpResponse Put(string url, string date);
-
         Task<HttpResponse> GetAsync(string url);
         Task<HttpResponse> PostAsync(string url, string data);
         Task<HttpResponse> PutAsync(string url, string date);
@@ -121,6 +117,18 @@ namespace EventStore.VSTools.Infrastructure
             if (expected == null) throw new ArgumentNullException("expected");
 
             return (expected.Contains(response.StatusCode));
+        }
+
+        public static bool IsAuthorized(this HttpResponse response)
+        {
+            return response.StatusCode != HttpStatusCode.Unauthorized;
+        }
+
+        public static HttpResponse EnsureAuthorized(this HttpResponse response)
+        {
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+                throw new UnauthorisedRequestException(response.Content);
+            return response;
         }
     }
 }
